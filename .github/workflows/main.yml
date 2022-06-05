@@ -1,7 +1,7 @@
 name: update
 on:
   schedule:
-    - cron: '0 18 * * *' #每日更新
+    - cron: '10 0 * * *' #每日更新
   workflow_dispatch:
 jobs:
   build:
