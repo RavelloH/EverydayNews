@@ -1,0 +1,44 @@
+name: update
+on:
+  schedule:
+    - cron: '0 18 * * *' #每日更新
+  watch:
+    types: [started]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest #运行环境
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: 'Git set'
+        run: |
+             git init
+             git pull
+      - name: 'Set up Python'
+        uses: actions/setup-python@v1
+        with:
+           python-version: 3.7 #v3
+      - name: 'Install requirements'
+        run: |
+             pip install wget
+             pip install bs4
+             pip install urllib3 #安装依赖
+      - name: 'Working'
+        run: 
+          python update.py #运行主程序
+      - name: Record time  
+        run: echo `date` > date.log
+
+      - name: Commit files
+        run: |
+          git diff
+          git config --local user.email "hyh20060327@qq.com"
+          git config --local user.name "RavelloH"
+          git add -A
+          git commit -m "`date '+%Y-%m-%d %H:%M:%S'`" || exit #动态提交信息
+          git status
+          git push -f
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+     
