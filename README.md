@@ -1,7 +1,10 @@
 # EverydayNews
-每日早8点(UTC+8)更新当日新闻，图片格式储存。
+每日早8点(UTC+8)更新当日新闻，图片格式储存，并附带在线搜索、索引页。
 
 ## 使用  
+### 在线查看:  
+https://ravelloh.github.io/EverydayNews/  
+
 ### 直接使用Github Page获取当天新闻  
 格式:  
 `https://ravelloh.github.io/EverydayNews/[四位年份]/[二位月份]/[yyyy-mm-dd].jpg`  
