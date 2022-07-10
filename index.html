@@ -10,6 +10,10 @@
     <link type="text/css" rel="stylesheet" href="https://ravelloh.github.io/css/style.css">
     <link type="text/css" rel="stylesheet" href="https://ravelloh.github.io/css/iconfont.css">
     <style type="text/css">
+        #news{
+            all: unset;
+            width: 100% !important;
+        }
         button {
             border: 1px solid #0099CC;
             background-color: #1e1e1e;
@@ -111,23 +115,35 @@
         }
 
         .drop-in {
-            opacity: 0;
-            display: none;
+            opacity: 0 !important;
+            display: none !important;
             transition-property: opacity, transform, display;
             transition-duration: 0.3s;
             transition-timing-function: cubic-bezier(0.750, -0.015, 0.565, 1.055);
-            display: inline-block;
+            display: inline-block !important;
         }
 
         .droped {
-            opacity: 1;
-            display: inline-block;
+            opacity: 1 !important;
+            display: inline-block !important;
         }
 
 
         .disappear {
             display: none;
             transition-duration: 0.3s;
+        }
+
+        @media screen and (max-width: 700px) {
+            #windowa {
+                margin-top: 15%;
+            }
+            .text {
+                width: 90%;
+            }
+            .social {
+                bottom: -40%;
+            }
         }
     </style> <!-- JavaScript -->
     <script type="text/javascript" src="https://ravelloh.github.io/js/loading.js"></script>
@@ -171,10 +187,10 @@
                     var head = 'https://ravelloh.github.io/EverydayNews/';
                     var end = ".jpg";
                     if (hour < 8) {
-                        if (month.length == 1) {
+                        if (yesmonth.length == 1) {
                             var yesmonth = '0' + yesmonth
                         }
-                        if (date.length == 1) {
+                        if (yesdate.length == 1) {
                             var yesdate = '0' + yesdate
                         }
                         var date = yesdate;
@@ -275,7 +291,7 @@
                     <script>
                         twikoo.init({
                             envId: 'https://comment-ravelloh.vercel.app/', // 腾讯云环境填 envId；Vercel 环境填地址（https://xxx.vercel.app）
-                            el: '#tcomment', // 容器元素
+                            el: '#tcomment',
                         })
                     </script>
             </div>
