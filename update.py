@@ -16,7 +16,7 @@ import time # 反反爬
 
 import os
 
-url = "https://api.iyk0.com/60s/"
+url = "https://api.xiaolu520.cn/api/60s.php"
 
 res=urlopen(url)    
 
