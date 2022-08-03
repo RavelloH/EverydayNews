@@ -1,4 +1,5 @@
 # EverydayNews
+[![update](https://github.com/RavelloH/EverydayNews/actions/workflows/main.yml/badge.svg)](https://github.com/RavelloH/EverydayNews/actions/workflows/main.yml)  
 每日早4点(UTC+8)更新当日新闻，图片格式储存，并附带在线搜索、索引页。
 
 ## 使用  
