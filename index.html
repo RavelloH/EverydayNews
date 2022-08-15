@@ -289,7 +289,7 @@
                     <div id='tcomment'></div>
                     <script src="https://cdn.staticfile.org/twikoo/1.5.11/twikoo.all.min.js"></script>
                     <script>
-                        window.TWIKOO_MAGIC_PATH="everydaynews"
+                        window.TWIKOO_MAGIC_PATH="EverydayNews"
 twikoo.init({
   envId: 'https://comment-ravelloh.vercel.app/',
   el: '#tcomment',
@@ -351,7 +351,8 @@ twikoo.init({
             speedtest()
 
             function share() {
-                contents = document.getElementById('news').src.substring(48, 58);
+                sharesrc = document.getElementById('news').src
+                contents = sharesrc.substring(sharesrc.length-14, sharesrc.length-4);
                 contents = 'https://ravelloh.github.io/EverydayNews?date=' + contents;
                 document.getElementById('share').innerHTML = contents;
             }
