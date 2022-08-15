@@ -39,4 +39,25 @@ jobs:
           git push -f
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-     
+  sync:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: wearerequired/git-mirror-action@master
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
+        with:
+          source-repo: "git@github.com:RavelloH/EverydayNews.git"
+          destination-repo: "git@gitee.com:ravelloh/EverydayNews.git"
+  reload-pages:
+    needs: sync
+    runs-on: ubuntu-latest
+    steps:
+      - name: reload
+        uses: mizuka-wu/gitee-pages-action@v1.0.0
+        with:
+          repository: RavelloH/EverydayNews
+          cookie: ${{ secrets.GITEE_COOKIE }}
+          branch: main
+          https: true
+
