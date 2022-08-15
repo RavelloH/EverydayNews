@@ -6,9 +6,9 @@
     <title>EverydayNews | RavelloH’s Blog</title>
     <meta name="keywords" content="RavelloH,blog,">
     <meta name="description" content="A Blog by RavelloH"> <!-- CSS -->
-    <link type="text/css" rel="stylesheet" href="https://ravelloh.github.io/css/common.css">
-    <link type="text/css" rel="stylesheet" href="https://ravelloh.github.io/css/style.css">
-    <link type="text/css" rel="stylesheet" href="https://ravelloh.github.io/css/iconfont.css">
+    <link type="text/css" rel="stylesheet" href="/css/common.css">
+    <link type="text/css" rel="stylesheet" href="/css/style.css">
+    <link type="text/css" rel="stylesheet" href="/css/iconfont.css">
     <style type="text/css">
         #news{
             all: unset;
@@ -146,8 +146,8 @@
             }
         }
     </style> <!-- JavaScript -->
-    <script type="text/javascript" src="https://ravelloh.github.io/js/loading.js"></script>
-    <script type="text/javascript" src="https://ravelloh.github.io/js/common.js"></script>
+    <script type="text/javascript" src="/js/loading.js"></script>
+    <script type="text/javascript" src="/js/common.js"></script>
 </head>
 
 <body>
@@ -155,9 +155,9 @@
     <body>
         <section class="showcase">
             <header>
-                <h2 class="logo"> <a href="/"> <img class="logoimg" src="https://ravelloh.github.io/img/avatar.jpg"
+                <h2 class="logo"> <a href="/"> <img class="logoimg" src="/img/avatar.jpg"
                             style="width: 1.5em;border-radius: 50%;" alt="avatar"> <img class="logoimg"
-                            src="https://ravelloh.github.io/img/RavelloH.svg" alt="RavelloH's Blog"> </a> </h2>
+                            src="/img/RavelloH.svg" alt="RavelloH's Blog"> </a> </h2>
                 <div class="headers">
                     <nav> <a href="/"> HOME </a> <a href="/works/"> WORKS </a> <a href="/articles/"> ARTICLES </a> <a
                             href="/tag/"> TAG </a> <a href="/about/"> ABOUT </a> </p>
@@ -184,7 +184,7 @@
                     var yesdate = yesterday.getDate() + '';
                     var dates = now.getDate()
                     var hour = now.getHours();//得到小时数
-                    var head = 'https://ravelloh.github.io/EverydayNews/';
+                    var head = '/EverydayNews/';
                     var end = ".jpg";
                     if (hour < 4) {
                         if (yesmonth.length == 1) {
@@ -289,17 +289,18 @@
                     <div id='tcomment'></div>
                     <script src="https://cdn.staticfile.org/twikoo/1.5.11/twikoo.all.min.js"></script>
                     <script>
-                        twikoo.init({
-                            envId: 'https://comment-ravelloh.vercel.app/', // 腾讯云环境填 envId；Vercel 环境填地址（https://xxx.vercel.app）
-                            el: '#tcomment',
-                        })
+                        window.TWIKOO_MAGIC_PATH="psgamespider"
+twikoo.init({
+  envId: 'https://comment-ravelloh.vercel.app/',
+  el: '#tcomment',
+  path: 'window.TWIKOO_MAGIC_PATH||window.location.pathname',
                     </script>
             </div>
 
         </section>
         <div class="menu">
             <ul>
-                <script type="text/javascript" src="https://ravelloh.github.io/js/menu.js"></script>
+                <script type="text/javascript" src="/js/menu.js"></script>
             </ul>
         </div>
         <script>
@@ -339,7 +340,7 @@
                 }).catch(err => { throw err });
             }
             function speedtest() {
-                getSpeedWithImg("https://ravelloh.github.io/img/avatar.jpg", 55.2).then(speed => {
+                getSpeedWithImg("/img/avatar.jpg", 55.2).then(speed => {
                     speed = 60000 / speed + '';
                     document.getElementById('loadtime').innerHTML = speed.substring(0, speed.indexOf(".") + 5) + '秒';
                 })
@@ -371,7 +372,7 @@
                 document.getElementById('sharebutton').innerHTML = '再次复制'
             }
         </script>
-        <script src="https://ravelloh.github.io/js/script.js"></script>
+        <script src="/js/script.js"></script>
         <script src="//instant.page/5.1.0" type="module"
             integrity="sha384-by67kQnR+pyfy8yWP4kPO12fHKRLHZPfEsiSXR8u2IKcTdxD805MGUXBzVPnkLHw"></script>
     </body>
