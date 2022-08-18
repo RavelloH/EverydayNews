@@ -25,7 +25,7 @@ jobs:
              pip install retrying
       - name: 'Working'
         run: 
-          python add.py #运行主程序
+          python update.py #运行主程序
       - name: Record time  
         run: echo `date` > date.log
 
