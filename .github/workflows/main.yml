@@ -24,7 +24,7 @@ jobs:
              pip install urllib3 #安装依赖
       - name: 'Working'
         run: 
-          python update.py #运行主程序
+          python add.py #运行主程序
       - name: Record time  
         run: echo `date` > date.log
 
