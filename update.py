@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## Author: RavelloH
 ## LICENSE: MIT
 ## 使用第三方API
@@ -7,8 +8,10 @@ from urllib.request import Request, urlopen, urlretrieve, urlopen, build_opener,
 from wget import download
 import time,datetime
 import os,re
+import json
 
 url = "https://api.03c3.cn/zb/api.php"
+texturl = "https://api.blogs.ink/api/today/?"
 res=urlopen(url)    
 data = res.read()
 # 转换成字符串
@@ -24,6 +27,18 @@ nowD = now.strftime("%d")
 nowt = now.strftime("%Y-%m-%d")
 print(nowt)
 os.makedirs('./'+str(nowY)+'/'+str(nowM)+'/',exist_ok=True)
+
+# 文字版生成
+f=open('./'+str(nowY)+'/'+str(nowM)+'/'+nowt+'.txt','w+')
+f2=open('./'+str(nowY)+'/'+str(nowM)+'/'+nowt+'.json','w+')
+textcontext=urlopen(texturl)
+textdata=textcontext.read()
+textjson = json.loads(textdata)
+textresult=''
+for i in textjson['data']['content']:
+    textresult=textresult+i+'\n'
+f.write(textresult.replace('&#34;','"'))
+f2.write(str(textjson))
 # 保存到本地
 path=download(strs_for_json,out='./'+str(nowY)+'/'+str(nowM)+'/'+nowt+'.jpg')
 print(path)
