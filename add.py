@@ -9,6 +9,13 @@ from wget import download
 import time,datetime
 import os,re
 import json
+from retrying import retry
+
+@retry(wait_fixed=2)
+def openurl(d):
+    global textcontext
+    textcontext=urlopen(d)
+    
 
 for i in range(76):
     now = datetime.datetime.now() + datetime.timedelta(hours=8) - datetime.timedelta(days=i)
@@ -23,7 +30,7 @@ for i in range(76):
     # 文字版生成
     f=open('./'+str(nowY)+'/'+str(nowM)+'/'+nowt+'.txt','w+')
     f2=open('./'+str(nowY)+'/'+str(nowM)+'/'+nowt+'.json','w+')
-    textcontext=urlopen(texturl)
+    openurl(texturl)
     textdata=textcontext.read()
     textjson = json.loads(textdata)
     textresult=''
