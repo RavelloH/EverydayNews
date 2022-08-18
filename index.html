@@ -165,6 +165,7 @@
 
     <body>
         <section class="showcase">
+            <div class="shade"></div>
             <header>
                 <h2 class="logo"> <a href="/"> <img class="logoimg" src="/img/avatar.jpg"
                             style="width: 1.5em;border-radius: 50%;" alt="avatar"> <img class="logoimg"
@@ -196,6 +197,7 @@
                     var dates = now.getDate()
                     var hour = now.getHours();//得到小时数
                     var head = '/EverydayNews/';
+                    var headgithub = 'https://ravelloh.github.io/EverydayNews/'
                     var end = ".jpg";
                     var textend = ".txt"
                     if (hour < 4) {
@@ -268,7 +270,7 @@
                         document.getElementById("news").classList.remove('droped');
                         var innerimgurl = document.getElementById("date").value;
                         if (innerimgurl !== ''){                       
-                        document.getElementById('newstext').innerHTML = '<iframe title="news" frameborder="no" src="'+head + innerimgurl.substring(0, 4) + '/' + innerimgurl.substring(5, 7) + '/' + innerimgurl.substring(0, 4) + '-' + innerimgurl.substring(5, 7) + '-' + innerimgurl.substring(8, 10) + textend+'"></iframe>';                      
+                        document.getElementById('newstext').innerHTML = '<iframe title="news" frameborder="no" src="'+headgithub + innerimgurl.substring(0, 4) + '/' + innerimgurl.substring(5, 7) + '/' + innerimgurl.substring(0, 4) + '-' + innerimgurl.substring(5, 7) + '-' + innerimgurl.substring(8, 10) + textend+'"></iframe>';                      
                         }
                         }
                         
@@ -316,9 +318,11 @@
                     <div id='tcomment'></div>
                     <script src="https://cdn.staticfile.org/twikoo/1.6.4/twikoo.all.min.js"></script>
                     <script>
+                        window.TWIKOO_MAGIC_PATH="EverydayNews";
                         twikoo.init({
                             envId: 'https://comment-ravelloh.vercel.app/', // 腾讯云环境填 envId；Vercel 环境填地址（https://xxx.vercel.app）
                             el: '#tcomment',
+                            path: 'window.TWIKOO_MAGIC_PATH||window.location.pathname',
                         })
                     </script>
             </div>
@@ -401,7 +405,7 @@
             }
             
             function downloadtext() {
-               downloadlink = '/EverydayNews/'+downloadsrc.substring(0, 4)+'/'+downloadsrc.substring(5, 7)+'/'+downloadsrc+'.txt';
+               downloadlink = 'https://ravelloh.github.io/EverydayNews/'+downloadsrc.substring(0, 4)+'/'+downloadsrc.substring(5, 7)+'/'+downloadsrc+'.txt';
                window.open(downloadlink)
             }
             function downloadjson() {
