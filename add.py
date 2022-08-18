@@ -32,11 +32,14 @@ for i in range(76):
     f=open('./'+str(nowY)+'/'+str(nowM)+'/'+nowt+'.txt','w+')
     f2=open('./'+str(nowY)+'/'+str(nowM)+'/'+nowt+'.json','w+')
     openurl(texturl)
-    textdata=textcontext.read()
-    textjson = json.loads(textdata)
-    textresult=''
-    for i in textjson['data']['content']:
-        textresult=textresult+i+'\n'
-    f.write(textresult.replace('&#34;','"'))
-    f2.write(str(textjson))
+    try:
+        textdata=textcontext.read()
+        textjson = json.loads(textdata)
+        textresult=''
+        for i in textjson['data']['content']:
+            textresult=textresult+i+'\n'
+        f.write(textresult.replace('&#34;','"'))
+        f2.write(str(textjson))
+    except:
+        print('err:'+nowt)
     time.sleep(2)
