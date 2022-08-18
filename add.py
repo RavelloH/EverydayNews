@@ -10,7 +10,6 @@ import time,datetime
 import os,re
 import json
 
-texturl = "https://api.blogs.ink/api/today/?"
 for i in range(76):
     now = datetime.datetime.now() + datetime.timedelta(hours=8) - datetime.timedelta(days=i)
     nowY = now.strftime("%Y")
@@ -18,6 +17,7 @@ for i in range(76):
     nowD = now.strftime("%d")
     nowt = now.strftime("%Y-%m-%d")
     print(nowt)
+    texturl = "https://api.blogs.ink/api/today/?date="+nowt
     os.makedirs('./'+str(nowY)+'/'+str(nowM)+'/',exist_ok=True)
     
     # 文字版生成
