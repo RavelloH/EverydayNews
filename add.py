@@ -13,6 +13,7 @@ from retrying import retry
 
 @retry(wait_fixed=2)
 def openurl(d):
+    print('opening...')
     global textcontext
     textcontext=urlopen(d)
     
