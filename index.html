@@ -367,6 +367,8 @@
                 links = links + '';
                 document.getElementById("news").src = head + links.substring(0, 4) + '/' + links.substring(4, 6) + '/' + links.substring(0, 4) + '-' + links.substring(4, 6) + '-' + links.substring(6, 8) + end;
                 document.getElementById('newsdate').innerHTML = links.substring(0, 4) + '年' + links.substring(4, 6) + '月' + links.substring(6, 8) + '日';
+                changevalue()
+                
                 restart()
             }
             setTimeout("drop()", "3000");
@@ -431,6 +433,12 @@
             function resetbutton() {
                 document.getElementById('sharebutton').innerHTML = '再次复制'
             }
+            
+            function changevalue() {
+                rawvalue = document.getElementById('news').src.substring(sharesrc.length-14, sharesrc.length-4);
+                document.getElementById("date").value=rawvalue
+            }
+            changevalue()
         </script>
         <script src="/js/script.js"></script>
         <script src="//instant.page/5.1.0" type="module"
