@@ -43,7 +43,7 @@ jobs:
   sync:
     needs: build
     runs-on: ubuntu-latest
-    
+    continue-on-error: True
     steps:
       - uses: wearerequired/git-mirror-action@master
         env:
@@ -54,6 +54,7 @@ jobs:
   reload-pages:
     needs: sync
     runs-on: ubuntu-latest
+    continue-on-error: True
     steps:
       - name: reload
         uses: mizuka-wu/gitee-pages-action@v1.0.0
