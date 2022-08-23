@@ -1,0 +1,30 @@
+name: synchro
+on:
+  schedule:
+    - cron: '30 5/6 * * *' #每日更新
+  workflow_dispatch:
+jobs:
+  sync:
+    needs: build
+    runs-on: ubuntu-latest
+    continue-on-error: True
+    steps:
+      - uses: wearerequired/git-mirror-action@master
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
+        with:
+          source-repo: "git@github.com:RavelloH/EverydayNews.git"
+          destination-repo: "git@gitee.com:ravelloh/EverydayNews.git"
+  reload-pages:
+    needs: sync
+    runs-on: ubuntu-latest
+    continue-on-error: True
+    steps:
+      - name: reload
+        uses: mizuka-wu/gitee-pages-action@v1.0.0
+        with:
+          repository: RavelloH/EverydayNews
+          cookie: ${{ secrets.GITEE_COOKIE }}
+          branch: main
+          https: true
+
