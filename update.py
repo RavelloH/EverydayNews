@@ -31,7 +31,7 @@ os.makedirs('./'+str(nowY)+'/'+str(nowM)+'/',exist_ok=True)
 # 文字版生成
 f=open('./'+str(nowY)+'/'+str(nowM)+'/'+nowt+'.txt','w+')
 f2=open('./'+str(nowY)+'/'+str(nowM)+'/'+nowt+'.json','w+')
-textcontext=urlopen(texturl)
+textcontext=urlopen(texturl,verify=False)
 textdata=textcontext.read()
 textjson = json.loads(textdata)
 textresult=''
