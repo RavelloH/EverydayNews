@@ -9,6 +9,8 @@ from wget import download
 import time,datetime
 import os,re
 import json
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 url = "https://api.03c3.cn/zb/api.php"
 texturl = "https://api.blogs.ink/api/today/?"
@@ -31,7 +33,7 @@ os.makedirs('./'+str(nowY)+'/'+str(nowM)+'/',exist_ok=True)
 # 文字版生成
 f=open('./'+str(nowY)+'/'+str(nowM)+'/'+nowt+'.txt','w+')
 f2=open('./'+str(nowY)+'/'+str(nowM)+'/'+nowt+'.json','w+')
-textcontext=urlopen(texturl,verify=False)
+textcontext=urlopen(texturl)
 textdata=textcontext.read()
 textjson = json.loads(textdata)
 textresult=''
