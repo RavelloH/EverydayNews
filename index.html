@@ -10,7 +10,7 @@
     <link type="text/css" rel="stylesheet" href="/css/style.css">
     <link type="text/css" rel="stylesheet" href="/css/iconfont.css">
     <style type="text/css">
-        #news{
+        #news {
             all: unset;
             width: 100% !important;
             filter: invert(92%);
@@ -75,7 +75,7 @@
 
 
 
-        @keyframes wordsLoop {
+@keyframes wordsLoop {
 
             0%,
             100% {
@@ -105,7 +105,7 @@
             transition-property: opacity, transform;
         }
 
-        @keyframes loading1 {
+@keyframes loading1 {
             from {
                 transform: rotate(0deg)
             }
@@ -135,7 +135,7 @@
             transition-duration: 0.3s;
         }
 
-        @media screen and (max-width: 700px) {
+@media screen and (max-width: 700px) {
             #windowa {
                 margin-top: 15%;
             }
@@ -146,32 +146,117 @@
                 bottom: -40%;
             }
         }
-        #newstext{
-        width: 100%;
-        height: 0;
+        #newstext {
+            width: 100%;
+            height: 0;
         }
-        @media (prefers-color-scheme: light) {
-        iframe{
-        width: 100%;
-        height:100%;
-        color: white; !imporant
-        filter: invert(100%);
-        -webkit-filter: invert(100%);       
-        }}
-        @media (prefers-color-scheme: dark) {
-        iframe{
-        width: 100%;
-        height:100%;
-        filter: invert(0%);
-        -webkit-filter: invert(0%); 
+@media (prefers-color-scheme: light) {
+            iframe {
+                width: 100%;
+                height: 100%;
+                color: white;
+                !imporant
+                filter: invert(100%);
+                -webkit-filter: invert(100%);
+            }}
+@media (prefers-color-scheme: dark) {
+            iframe {
+                width: 100%;
+                height: 100%;
+                filter: invert(0%);
+                -webkit-filter: invert(0%);
+            }
         }
+        .half {
+            width: 49.5%;
+            padding: 5px 10px;
         }
-        .half{
-        width:49.5%;
-        padding:5px 10px;}
-    </style> <!-- JavaScript -->
+
+        form.searchbox button {
+            height: 30px;
+            float: left;
+            width: 20%;
+            padding: 5px;
+            background: #1e1e1e;
+            color: white;
+            font-size: 12px;
+            border: none;
+            cursor: pointer;
+            border: 1px solid #1e1e1e;
+            border-radius: 0px 10px 10px 0px;
+            text-align: center;
+            line-height: 10px;
+            margin: auto;
+        }
+
+        form.searchbox button:hover {
+            background: #0b7dda;
+            transition: background 0.2s;
+        }
+
+        form.searchbox::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+        .resultlist {
+            top: -20px;
+            height: 0;
+            width: 100%;
+            transition: height 0.4s;
+            background: #1e1e1e;
+            color: #c6c9ce;
+            overflow: hidden;
+        }
+        .resultlist#active {
+            border-radius: 3px;
+            border: 1px solid #0099CC;
+            height: 40vh;
+        }
+        .resultlist * {
+            margin: 2px;
+        }
+        .resulttitle {
+            color: #ffffff;
+            font-size: 1em;
+        }
+
+        #info {
+            opacity: 1;
+            transition: opacity 0.4s;
+        }
+        #hidden {
+            opacity: 0;
+        }
+
+        .fc {
+            text-align: center;
+        }
+        .title {
+            max-width: 45%;
+        }
+        .tr {
+            text-align: right
+        }
+        mark {
+            background-color: #0b7dda;
+            border-radius: 4px;
+            color: #fff;
+            margin: 0;
+        }
+        .showbox {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+            margin: 2px !important
+        }
+
+    </style>
+    <!-- JavaScript -->
     <script type="text/javascript" src="/js/loading.js"></script>
     <script type="text/javascript" src="/js/common.js"></script>
+    <script src="/EverydayNews/searchdata.js"></script>
 </head>
 
 <body>
@@ -181,164 +266,185 @@
             <div class="shade"></div>
             <header>
                 <h2 class="logo"> <a href="/"> <img class="logoimg" src="/img/avatar.jpg"
-                            style="width: 1.5em;border-radius: 50%;" alt="avatar"> <img class="logoimg"
-                            src="/img/RavelloH.svg" alt="RavelloH's Blog"> </a> </h2>
+                    style="width: 1.5em;border-radius: 50%;" alt="avatar"> <img class="logoimg"
+                    src="/img/RavelloH.svg" alt="RavelloH's Blog"> </a> </h2>
                 <div class="headers">
-                    <nav> <a href="/"> HOME </a> <a href="/works/"> WORKS </a> <a href="/articles/"> ARTICLES </a> <a
-                            href="/tag/"> TAG </a> <a href="/about/"> ABOUT </a> </p>
-                    </nav>
-                </div>
-                <div class="toggle" class="header"> </div>
-            </header>
-            <div class="overlay"></div>
-            <div class="text" id="windowa">
-                <h3>EverydayNews</h3>
-                <div id="circle"></div>
-                <p id="tip" class="center">正在获取当日新闻...</p>
+                    <nav>
+                        <a href="/"> HOME </a> <a href="/works/"> WORKS </a> <a href="/articles/"> ARTICLES </a> <a
+                            href="/tag/"> TAG </a> <a href="/about/"> ABOUT </a>
+                    </p>
+                </nav>
+            </div>
+            <div class="toggle" class="header">
+            </div>
+        </header>
+        <div class="overlay"></div>
+        <div class="text" id="windowa">
+            <h3>EverydayNews</h3>
+            <div id="circle"></div>
+            <p id="tip" class="center">
+                正在获取当日新闻...
+            </p>
 
+            <script>
+                now = new Date();
+                yesterday = new Date()
+                yesterday.setTime(yesterday.getTime() - 24 * 60 * 60 * 1000);
+                var year = now.getFullYear(); //得到年份
+                var yesyear = yesterday.getFullYear();
+                var month = now.getMonth() + 1 + ''; //得到月份
+                var yesmonth = yesterday.getMonth() + 1 + '';
+                var months = now.getMonth() + 1
+                var date = now.getDate() + ''; //得到日期
+                var yesdate = yesterday.getDate() + '';
+                var dates = now.getDate()
+                var hour = now.getHours(); //得到小时数
+                var head = '/EverydayNews/';
+                var headgithub = 'https://ravelloh.github.io/EverydayNews/'
+                var end = ".jpg";
+                var textend = ".txt"
+                if (hour < 4) {
+                    if (yesmonth.length == 1) {
+                        var yesmonth = '0' + yesmonth
+                    }
+                    if (yesdate.length == 1) {
+                        var yesdate = '0' + yesdate
+                    }
+                    var date = yesdate;
+                    var month = yesmonth;
+                    var year = yesyear;
+                } else {
+                    if (month.length == 1) {
+                        var month = '0' + month
+                    }
+                    if (date.length == 1) {
+                        var date = '0' + date
+                    }
+                }
+
+                document.write("<div id='newstext'></div><img id='news' src='" + head + year + '/' + month + '/' + year + '-' + month + '-' + date + end + "' class='drop-in'>")
+            </script>
+
+        </div>
+        <ul class="social">
+            <li> <a href="/about/"> <span class="iconfont icon-about"></span> </a> </li>
+            <li> <a href="http://github.com/ravelloh" target="_blank" rel="noreferrer"> <span
+                class="iconfont icon-github"></span> </a> </li>
+            <li> <a href="http://xeocnet-studio.github.io" target="_blank" rel="noreferrer"> <span
+                class="iconfont icon-home"> </span> </a> </li>
+        </ul>
+        <div class="text" id="text">
+            <h4>- 信息 -</h4>
+            <p>
+                当前预览的新闻:<b id='newsdate'>此页面需要JavaScript支持，请检查相关配置</b>
+            </p>
+            <p>
+                预计响应时间:<b id='loadtime'>正在连接至服务器...</b>
+            </p>
+            <h4>- 查询 -</h4>
+            <div class='searchbox'>
+                <form class="searchbox" onSubmit="return check();" autocomplete="off">
+                    <input type="text" placeholder="从所有新闻中搜索关键字..." name="search" oninput="searchthetext()" onpropertychange="searchthetext()">
+                    <div class="resultlist" id="resultlist">
+                        <i>- 搜索 -</i><hr><p align="center">
+                            输入关键词以在文章标题及正文中查询
+                        </p>
+                        <hr><a href="https://github.com/ravelloh/RPageSearch">Search powered by RavelloH's RPageSearch</a>
+                    </div>
+                </form>
+            </div>
+            <form onsubmit="return post()">
+                <div class="form-group">
+                    <input type="date" name="date" id="date" value="" min="2022-06-05" max="" required>
+                    <button class="button" value="查询" onclick="search();">查询</button>
+                    <button class="button" value="查询文字版" onclick="searchtext();">查询文字版</button>
+                </div>
+                <br>
+
+                <p>
+                    最近十天新闻:
+                </p>
                 <script>
-                    now = new Date();
-                    yesterday = new Date()
-                    yesterday.setTime(yesterday.getTime() - 24 * 60 * 60 * 1000);
-                    var year = now.getFullYear(); //得到年份
-                    var yesyear = yesterday.getFullYear();
-                    var month = now.getMonth() + 1 + '';//得到月份
-                    var yesmonth = yesterday.getMonth() + 1 + '';
-                    var months = now.getMonth() + 1
-                    var date = now.getDate() + '';//得到日期
-                    var yesdate = yesterday.getDate() + '';
-                    var dates = now.getDate()
-                    var hour = now.getHours();//得到小时数
-                    var head = '/EverydayNews/';
-                    var headgithub = 'https://ravelloh.github.io/EverydayNews/'
-                    var end = ".jpg";
-                    var textend = ".txt"
-                    if (hour < 4) {
-                        if (yesmonth.length == 1) {
-                            var yesmonth = '0' + yesmonth
-                        }
-                        if (yesdate.length == 1) {
-                            var yesdate = '0' + yesdate
-                        }
-                        var date = yesdate;
-                        var month = yesmonth;
-                        var year = yesyear;
-                    } else {
-                        if (month.length == 1) {
-                            var month = '0' + month
-                        }
-                        if (date.length == 1) {
-                            var date = '0' + date
+                    var local = window.location.search;
+                    document.getElementById('newsdate').innerHTML = year + '年' + month + '月' + date + '日';
+                    if (local.substring(0, 6) == '?date=') {
+                        document.getElementById("news").src = head + local.substring(6, 10) + '/' + local.substring(11, 13) + '/' + local.substring(6, 10) + '-' + local.substring(11, 13) + '-' + local.substring(14, 16) + end;
+                        document.getElementById('newsdate').innerHTML = local.substring(6, 10) + '年' + local.substring(11, 13) + '月' + local.substring(14, 16) + '日'
+                    }
+
+                    document.getElementById("date").max = year + '-' + month + '-' + date //限制时间
+                    function search() {
+
+                        var innerimgurl = document.getElementById("date").value;
+                        if (innerimgurl !== '') {
+                            document.getElementById('newstext').innerHTML = '';
+                            document.getElementById('newstext').style.height = '0';
+                            document.getElementById("news").src = head + innerimgurl.substring(0, 4) + '/' + innerimgurl.substring(5, 7) + '/' + innerimgurl.substring(0, 4) + '-' + innerimgurl.substring(5, 7) + '-' + innerimgurl.substring(8, 10) + end;
+                            document.getElementById('newsdate').innerHTML = innerimgurl.substring(0, 4) + '年' + innerimgurl.substring(5, 7) + '月' + innerimgurl.substring(8, 10) + '日';
+                            restart()
                         }
                     }
 
-                    document.write("<div id='newstext'></div><img id='news' src='" + head + year + '/' + month + '/' + year + '-' + month + '-' + date + end + "' class='drop-in'>")
+
+                    function searchtext() {
+                        var innerimgurl = document.getElementById("date").value;
+                        if (innerimgurl !== '') {
+                            document.getElementById('newstext').style.height = '100%';
+                            document.getElementById("news").classList.remove('droped');
+                            document.getElementById('newstext').innerHTML = '<iframe title="news" frameborder="no" src="'+headgithub + innerimgurl.substring(0, 4) + '/' + innerimgurl.substring(5, 7) + '/' + innerimgurl.substring(0, 4) + '-' + innerimgurl.substring(5, 7) + '-' + innerimgurl.substring(8, 10) + textend+'"></iframe>';
+                        }
+                    }
+
+                    function post() {
+                        return false
+                    }
+                    for (i = 0; i < 10; i++) {
+                        days = new Date()
+                        days.setTime(days.getTime() - 24 * 60 * 60 * 1000 * i);
+                        var daysyear = days.getFullYear(); //得到年份
+                        var daysmonth = days.getMonth() + 1 + ''; //得到月份
+                        var daysdate = days.getDate() + ''; //得到日期
+                        if (daysmonth.length == 1) {
+                            var daysmonth = '0' + daysmonth
+                        }
+                        if (daysdate.length == 1) {
+                            var daysdate = '0' + daysdate
+                        }
+                        document.write("<a class='c' onclick='qcsearch(" + daysyear + daysmonth + daysdate + ")'>" + daysyear + '年' + daysmonth + '月' + daysdate + '日' + "</a>");;
+                    }
                 </script>
 
-            </div>
-            <ul class="social">
-                <li> <a href="/about/"> <span class="iconfont icon-about"></span> </a> </li>
-                <li> <a href="http://github.com/ravelloh" target="_blank" rel="noreferrer"> <span
-                            class="iconfont icon-github"></span> </a> </li>
-                <li> <a href="http://xeocnet-studio.github.io" target="_blank" rel="noreferrer"> <span
-                            class="iconfont icon-home"> </span> </a> </li>
-            </ul>
-            <div class="text" id="text">
-                <h4>- 信息 -</h4>
-                <p>当前预览的新闻:<b id='newsdate'>此页面需要JavaScript支持，请检查相关配置</b></p>
-                <p>预计响应时间:<b id='loadtime'>正在连接至服务器...</b></p>
-                <h4>- 查询 -</h4>
-                <form onsubmit="return post()">
-                    <div class="form-group">
-                        <input type="date" name="date" id="date" value="" min="2022-06-05" max="" required>
-                        <button class="button" value="查询" onclick="search();">查询</button>
-                        <button class="button" value="查询文字版" onclick="searchtext();">查询文字版</button>
-                    </div>
-                    <br>
+                <br>
+                <br>
 
-                    <p>最近十天新闻:</p>
-                    <script>
-                        var local = window.location.search;
-                        document.getElementById('newsdate').innerHTML = year + '年' + month + '月' + date + '日';
-                        if (local.substring(0, 6) == '?date=') {
-                            document.getElementById("news").src = head + local.substring(6, 10) + '/' + local.substring(11, 13) + '/' + local.substring(6, 10) + '-' + local.substring(11, 13) + '-' + local.substring(14, 16) + end;
-                            document.getElementById('newsdate').innerHTML = local.substring(6, 10) + '年' + local.substring(11, 13) + '月' + local.substring(14, 16) + '日'
-                        }
+                <h4>- 分享 -</h4>
+                <a class='linkline' id='share'>/EverydayNews/</a>
+                <button class="button" value="复制" onclick="copyHandle();" id='sharebutton'>复制当前新闻链接</button>
+                <button class="button half" value="下载" onclick="downloadtext();" id='downloadbutton'>下载文字版</button>
+                <button class="button half" value="下载JSON" onclick="downloadjson();" id='downloadbutton'>下载JSON</button>
+                <br>
+                <br>
+                <br>
+                <h4>- 关于 -</h4>
+                <p>
+                    作者:RavelloH<br>
+                    开源地址:<a href='https://github.com/RavelloH/EverydayNews'
+                        class="linkline">Github-RavelloH/EverydayNews</a><br>
+                    LICENCE:MIT<br>
+                </p>
 
-                        document.getElementById("date").max = year + '-' + month + '-' + date //限制时间  
-                        function search() {
-                            
-                            var innerimgurl = document.getElementById("date").value;
-                            if (innerimgurl !== '') {
-                                document.getElementById('newstext').innerHTML='';
-                                document.getElementById('newstext').style.height='0';
-                                document.getElementById("news").src = head + innerimgurl.substring(0, 4) + '/' + innerimgurl.substring(5, 7) + '/' + innerimgurl.substring(0, 4) + '-' + innerimgurl.substring(5, 7) + '-' + innerimgurl.substring(8, 10) + end;
-                                document.getElementById('newsdate').innerHTML = innerimgurl.substring(0, 4) + '年' + innerimgurl.substring(5, 7) + '月' + innerimgurl.substring(8, 10) + '日';
-                                restart()
-                            }
-                        }
-                        
-
-                        function searchtext() {
-                        var innerimgurl = document.getElementById("date").value;
-                        if (innerimgurl !== ''){             
-                        document.getElementById('newstext').style.height='100%';
-                        document.getElementById("news").classList.remove('droped');
-                        document.getElementById('newstext').innerHTML = '<iframe title="news" frameborder="no" src="'+headgithub + innerimgurl.substring(0, 4) + '/' + innerimgurl.substring(5, 7) + '/' + innerimgurl.substring(0, 4) + '-' + innerimgurl.substring(5, 7) + '-' + innerimgurl.substring(8, 10) + textend+'"></iframe>';                      
-                        }
-                        }
-                        
-                        function post() {
-                            return false
-                        }
-                        for (i = 0; i < 10; i++) {
-                            days = new Date()
-                            days.setTime(days.getTime() - 24 * 60 * 60 * 1000 * i);
-                            var daysyear = days.getFullYear(); //得到年份
-                            var daysmonth = days.getMonth() + 1 + '';//得到月份
-                            var daysdate = days.getDate() + '';//得到日期
-                            if (daysmonth.length == 1) {
-                                var daysmonth = '0' + daysmonth
-                            }
-                            if (daysdate.length == 1) {
-                                var daysdate = '0' + daysdate
-                            }
-                            document.write("<a class='c' onclick='qcsearch(" + daysyear + daysmonth + daysdate + ")'>" + daysyear + '年' + daysmonth + '月' + daysdate + '日' + "</a>");
-                            ;
-                        }
-                    </script>
-
-                    <br>
-                    <br>
-
-                    <h4>- 分享 -</h4>
-                    <a class='linkline' id='share'>/EverydayNews/</a>
-                    <button class="button" value="复制" onclick="copyHandle();" id='sharebutton'>复制当前新闻链接</button>
-                    <button class="button half" value="下载" onclick="downloadtext();" id='downloadbutton'>下载文字版</button>
-                    <button class="button half" value="下载JSON" onclick="downloadjson();" id='downloadbutton'>下载JSON</button>
-                    <br>
-                    <br>
-                    <br>
-                    <h4>- 关于 -</h4>
-                    <p>
-                        作者:RavelloH<br>
-                        开源地址:<a href='https://github.com/RavelloH/EverydayNews'
-                            class="linkline">Github-RavelloH/EverydayNews</a><br>
-                        LICENCE:MIT<br>
-                    </p>
-
-                    <br>
-                    <h4>- 评论 -</h4>
-                    <div id='tcomment'></div>
-                    <script src="https://cdn.staticfile.org/twikoo/1.6.4/twikoo.all.min.js"></script>
-                    <script>
-                        window.TWIKOO_MAGIC_PATH="EverydayNews";
-                        twikoo.init({
-                            envId: 'https://comment-ravelloh.vercel.app/', // 腾讯云环境填 envId；Vercel 环境填地址（https://xxx.vercel.app）
-                            el: '#tcomment',
-                            path: 'window.TWIKOO_MAGIC_PATH||window.location.pathname',
-                        })
-                    </script>
+                <br>
+                <h4>- 评论 -</h4>
+                <div id='tcomment'></div>
+                <script src="https://cdn.staticfile.org/twikoo/1.6.4/twikoo.all.min.js"></script>
+                <script>
+                    window.TWIKOO_MAGIC_PATH = "EverydayNews";
+                    twikoo.init({
+                        envId: 'https://comment-ravelloh.vercel.app/', // 腾讯云环境填 envId；Vercel 环境填地址（https://xxx.vercel.app）
+                        el: '#tcomment',
+                        path: 'window.TWIKOO_MAGIC_PATH||window.location.pathname',
+                    })
+                </script>
             </div>
 
         </section>
@@ -362,13 +468,13 @@
                 setTimeout("drop()", "3000");
             }
             function qcsearch(links) {
-                document.getElementById('newstext').innerHTML='';
-                document.getElementById('newstext').style.height='0';
+                document.getElementById('newstext').innerHTML = '';
+                document.getElementById('newstext').style.height = '0';
                 links = links + '';
                 document.getElementById("news").src = head + links.substring(0, 4) + '/' + links.substring(4, 6) + '/' + links.substring(0, 4) + '-' + links.substring(4, 6) + '-' + links.substring(6, 8) + end;
                 document.getElementById('newsdate').innerHTML = links.substring(0, 4) + '年' + links.substring(4, 6) + '月' + links.substring(6, 8) + '日';
                 changevalue()
-                
+
                 restart()
             }
             setTimeout("drop()", "3000");
@@ -385,7 +491,9 @@
                         resolve(speed);
                     }
                     img.src = imgUrl;
-                }).catch(err => { throw err });
+                }).catch(err => {
+                    throw err
+                });
             }
             function speedtest() {
                 getSpeedWithImg("/img/avatar.jpg", 55.2).then(speed => {
@@ -404,10 +512,11 @@
                 contents = 'https://ravelloh.github.io/EverydayNews?date=' + contents;
                 document.getElementById('share').innerHTML = contents;
             }
-            
+
 
             share()
             
+
             function copyHandle() {
                 let copy = (e) => {
                     e.preventDefault()
@@ -419,26 +528,111 @@
                 document.addEventListener('copy', copy)
                 document.execCommand("Copy");
             }
-            
+
             function downloadtext() {
-               downloadlink = 'https://ravelloh.github.io/EverydayNews/'+downloadsrc.substring(0, 4)+'/'+downloadsrc.substring(5, 7)+'/'+downloadsrc+'.txt';
-               window.open(downloadlink)
+                downloadlink = 'https://ravelloh.github.io/EverydayNews/'+downloadsrc.substring(0, 4)+'/'+downloadsrc.substring(5, 7)+'/'+downloadsrc+'.txt';
+                window.open(downloadlink)
             }
             function downloadjson() {
-               downloadlink = '/EverydayNews/'+downloadsrc.substring(0, 4)+'/'+downloadsrc.substring(5, 7)+'/'+downloadsrc+'.json';
-               window.open(downloadlink)
-            
+                downloadlink = '/EverydayNews/'+downloadsrc.substring(0, 4)+'/'+downloadsrc.substring(5, 7)+'/'+downloadsrc+'.json';
+                window.open(downloadlink)
+
             }
 
             function resetbutton() {
                 document.getElementById('sharebutton').innerHTML = '再次复制'
             }
-            
+
             function changevalue() {
                 rawvalue = document.getElementById('news').src.substring(sharesrc.length-14, sharesrc.length-4);
-                document.getElementById("date").value=rawvalue
+                document.getElementById("date").value = rawvalue
             }
             changevalue()
+
+            function check() {
+                return false;
+            }
+
+            function maxfor(arr) {
+                var len = arr.length;
+                var max = -Infinity;
+                while (len--) {
+                    if (arr[len] > max) {
+                        max = arr[len];
+                    }
+                }
+                return max;
+            }
+            let input = document.querySelector("input[type='text']");
+            let result = document.getElementById('resultlist')
+            let button = document.getElementById('searchbutton')
+            input.addEventListener("focus", e => {
+                result.id = 'active'
+                result.style.overflow = 'auto'
+                result.style.padding = '3px'
+            })
+            input.addEventListener("blur", e => {
+                result.id = 'resultlist'
+                result.style.overflow = 'hidden'
+                result.style.padding = '0'
+            })
+
+            obj = JSON.parse(SearchResult);
+            function searchthetext() {
+                result.innerHTML = input.value;
+                if (input.value == '') {
+                    result.innerHTML = '<i>- 搜索 -</i><hr>'+'<p align="center">输入关键词以在往期新闻中查询</p><hr>'
+                }
+                resultcount = 0;
+                resultstr = '';
+
+                // 正文搜索
+                var resulttextcache = new Array()
+                for (i = 0; i < obj.news.length; i++) {
+                    if (obj.news[i]['text'].includes(input.value) == true) {
+                        resulttextcache.unshift(obj.news[i]['title'])
+                        resultcount++;
+                    }
+                }
+    
+                var arr = [];
+                for (var i = 0; i < resulttextcache.length; i++) {
+                    if (arr.indexOf(resulttextcache[i]) == -1) {
+                        arr.push(resulttextcache[i]);
+                    }
+                }
+                
+                // 正文搜索结果展示
+                var targetname = new Array()
+                var targetscore = new Array()
+                var resultfortext = '';
+                var textsearchresult = ''
+                if (arr.length !== 0 && input.value !== '') {
+                    for (i = 0; i < arr.length; i++) {
+                        for (j = 0; j < obj.news.length; j++) {
+                            if (obj.news[j]['title'] == arr[i]) {
+                                textorder = obj.news[j]['text'].indexOf(input.value) -15;
+                                while (textorder < 0) {
+                                    textorder++
+                                }
+                                resultfortext = '<h4><a onclick="qcsearch(\''+obj.news[j]["time"].replace(new RegExp('-', 'g'), ''
+    )+'\')" class="resulttitle">'+obj.news[j]['title']+'</a></h4><p class="showbox">...'+obj.news[j]['text'].substring(textorder, textorder+100).replace(new RegExp(input.value, 'g'), '<mark>'+input.value+'</mark>')+'</p>'
+                                textsearchresult = resultfortext + '<hr>' + textsearchresult;
+                            }
+                        }
+                    }
+                }
+
+
+                // 无效结果安排
+                if (resultcount !== obj.news.length) {
+                    if (resultcount == 0) {
+                        result.innerHTML = '<i>"'+input.value+'"</i><hr><p align="center">没有找到结果</p>'
+                    }
+                }
+                // 整合
+                result.innerHTML = result.innerHTML.substring(0, result.innerHTML.length-4)+textsearchresult.substring(0, textsearchresult.length-4)+'<hr><a href="https://github.com/ravelloh/RPageSearch" class="tr">Search powered by RavelloH\'s RPageSearch</a>'
+            }
         </script>
         <script src="/js/script.js"></script>
         <script src="//instant.page/5.1.0" type="module"
