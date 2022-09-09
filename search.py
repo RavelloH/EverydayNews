@@ -54,4 +54,4 @@ json_all = json_all[:-1] + main_structure_end
 total_str = 'var SearchResult = "' + json_all.replace('"','\\"') + '"'
 ## 写入JSON
 with open('searchdata.js','w+') as f1:
-    f1.write(json_all)
+    f1.write(total_str)
