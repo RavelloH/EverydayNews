@@ -33,22 +33,25 @@ for i in range(days):
     nowM = now.strftime("%m")
     nowD = now.strftime("%d")
     nowt = now.strftime("%Y-%m-%d")
-    with open('./'+nowY+'/'+nowM+'/'+nowt+'.json','r') as f:
-        try:
-            text = f.read().replace("'",'"')
-            jsons = json.loads(text)
-            time = jsons['data']['updated'][:10]
-            title = time.replace('-','年',1).replace('-','月',1)+'日'
-            content = jsons['data']['content']
-            # 重构json title time
-            json_all = json_all + inner_structure_1 + title + inner_structure_2 + time + inner_structure_3
+    try:
+        with open('./'+nowY+'/'+nowM+'/'+nowt+'.json','r') as f:
+            try:
+                text = f.read().replace("'",'"')
+                jsons = json.loads(text)
+                time = jsons['data']['updated'][:10]
+                title = time.replace('-','年',1).replace('-','月',1)+'日'
+                content = jsons['data']['content']
+                # 重构json title time
+                json_all = json_all + inner_structure_1 + title + inner_structure_2 + time + inner_structure_3
         
-            # 内容循环
-            for j in range(3,len(content)-1):
-                json_all = json_all + content[j] + '  '
-            json_all = json_all + inner_structure_4 + ','
+                # 内容循环
+                for j in range(3,len(content)-1):
+                    json_all = json_all + content[j] + '  '
+                json_all = json_all + inner_structure_4 + ','
+            except:
+                 pass
         except:
-             pass
+            pass
 json_all = json_all[:-1] + main_structure_end
 
 total_str = 'var SearchResult = "' + json_all.replace('"','\\"') + '"'
