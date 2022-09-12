@@ -50,8 +50,8 @@ for i in range(days):
                 json_all = json_all + inner_structure_4 + ','
             except:
                  pass
-        except:
-            pass
+    except:
+        pass
 json_all = json_all[:-1] + main_structure_end
 
 total_str = 'var SearchResult = "' + json_all.replace('"','\\"') + '"'
