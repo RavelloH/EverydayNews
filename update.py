@@ -11,7 +11,7 @@ import os,re
 import json
 import ssl
 
-url = "https://api.03c3.cn/zb/api.php"
+url = "https://api.noome.cn/zb/60spng.php"
 texturl = "https://api.blogs.ink/api/today/?"
 res=urlopen(url)    
 data = res.read()
