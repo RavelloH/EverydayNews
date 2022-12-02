@@ -18,8 +18,8 @@ data = res.read()
 # 转换成字符串
 strs = str(data)
 # 截取字符串
-pattern = re.compile(r'[a-zA-z]+://[^\s"]*')
-strs_for_json = pattern.search(strs).group()
+# pattern = re.compile(r'[a-zA-z]+://[^\s"]*')
+# strs_for_json = pattern.search(strs).group()
 
 now = datetime.datetime.now()+ datetime.timedelta(hours=8)
 nowY = now.strftime("%Y")
@@ -42,5 +42,5 @@ for i in textjson['data']['content']:
 f.write(textresult.replace('&#34;','"'))
 f2.write(str(textjson))
 # 保存到本地
-path=download(strs_for_json,out='./'+str(nowY)+'/'+str(nowM)+'/'+nowt+'.jpg')
+path=download(url,out='./'+str(nowY)+'/'+str(nowM)+'/'+nowt+'.jpg')
 print(path)
