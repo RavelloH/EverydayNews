@@ -494,8 +494,8 @@
                 });
             }
             function speedtest() {
-                getSpeedWithImg("/img/avatar.jpg", 55.2).then(speed => {
-                    speed = 60000 / speed + '';
+                getSpeedWithImg("/img/avatar.jpg"+"?"+Math.floor(Math.random()*2400000), 55.2).then(speed => {
+                    speed = 400 / speed + '';
                     document.getElementById('loadtime').innerHTML = speed.substring(0, speed.indexOf(".") + 5) + '秒';
                 })
             }
