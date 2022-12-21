@@ -8,13 +8,13 @@ jobs:
     runs-on: ubuntu-latest #运行环境
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: 'Git set'
         run: |
              git init
              git pull
       - name: 'Set up Python'
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
            python-version: 3.7 #v3
       - name: 'Install requirements'
@@ -68,13 +68,13 @@ jobs:
     runs-on: ubuntu-latest #运行环境
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: 'Git set'
         run: |
              git init
              git pull
       - name: 'Set up Python'
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
            python-version: 3.7 #v3
       - name: 'Install requirements'
