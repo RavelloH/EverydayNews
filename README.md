@@ -13,7 +13,12 @@ https://ravelloh.github.io/EverydayNews/
 https://ravelloh.github.io/EverydayNews/2022/06/2022-06-05.jpg
 
 ### 搜索特定日期新闻  
-在此输入日期即可查询。
-https://github.com/RavelloH/EverydayNews/find/main  
+在此输入日期即可查询。  
+Github:  - https://github.com/RavelloH/EverydayNews/find/main  
+Website: -  https://ravelloh.github.io/EverydayNews/  (位于页面右上角)
+
+### 搜索特定内容新闻
+https://ravelloh.github.io/EverydayNews/
+(位于页面右上角)
 
 
