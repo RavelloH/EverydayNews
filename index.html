@@ -1,15 +1,14 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh">
-
-<head>
-    <meta charset="UTF-8">
-    <title>EverydayNews | RavelloH’s Blog</title>
-    <meta name="keywords" content="RavelloH,blog,">
-    <meta name="description" content="A Blog by RavelloH"> <!-- CSS -->
-    <link type="text/css" rel="stylesheet" href="/css/common.css">
-    <link type="text/css" rel="stylesheet" href="/css/style.css">
-    <link type="text/css" rel="stylesheet" href="/css/iconfont.css">
-    <style type="text/css">
+    <head>
+        <meta charset="UTF-8">
+        <title>EverydayNews | RavelloH’s Blog</title>
+        <meta name="keywords" content="RavelloH,blog,">
+        <meta name="description" content="A Blog by RavelloH"> <!-- CSS -->
+        <link type="text/css" rel="stylesheet" href="/css/common.css">
+        <link type="text/css" rel="stylesheet" href="/css/style.css">
+        <link type="text/css" rel="stylesheet" href="/css/iconfont.css">
+        <style type="text/css">
         #news {
             max-height: unset;
             width: 100% !important;
@@ -251,40 +250,30 @@
             margin: 2px !important
         }
 
-    </style>
-    <!-- JavaScript -->
-    <script type="text/javascript" src="/js/common.js"></script>
-    <script src="/EverydayNews/searchdata.js"></script>
-</head>
-
-<body>
-
+    </style> <!-- JavaScript -->
+        <script type="text/javascript" src="/js/common.js"></script>
+        <script src="/EverydayNews/searchdata.js"></script>
+    </head>
     <body>
         <section class="showcase">
             <div class="shade"></div>
             <header>
-                <h2 class="logo"> <a href="/"> <img class="logoimg" src="/img/avatar.jpg"
-                    style="width: 1.5em;border-radius: 50%;" alt="avatar"> <img class="logoimg"
-                    src="/img/RavelloH.svg" alt="RavelloH's Blog"> </a> </h2>
+                <h2 class="logo"><a href="/"> <img class="logoimg" src="/img/avatar.jpg" style="width: 1.5em;border-radius: 50%;" alt="avatar"> <img class="logoimg" src="/img/RavelloH.svg" alt="RavelloH's Blog"> </a></h2>
                 <div class="headers">
                     <nav>
-                        <a href="/"> HOME </a> <a href="/works/"> WORKS </a> <a href="/articles/"> ARTICLES </a> <a
-                            href="/tag/"> TAG </a> <a href="/about/"> ABOUT </a>
-                    </p>
-                </nav>
-            </div>
-            <div class="toggle" class="header">
-            </div>
-        </header>
-        <div class="overlay"></div>
-        <div class="text" id="windowa">
-            <h3>EverydayNews</h3>
-            <div id="circle"></div>
-            <p id="tip" class="center">
-                正在获取当日新闻...
-            </p>
-
-            <script>
+                        <a href="/"> HOME </a> <a href="/works/"> WORKS </a> <a href="/articles/"> ARTICLES </a> <a href="/tag/"> TAG </a> <a href="/about/"> ABOUT </a>
+                        <p></p>
+                    </nav>
+                </div>
+                <div class="toggle">
+                </div>
+            </header>
+            <div class="overlay"></div>
+            <div class="text" id="windowa">
+                <h3>EverydayNews</h3>
+                <div id="circle"></div>
+                <p id="tip" class="center">正在获取当日新闻...</p>
+                <script>
                 now = new Date();
                 yesterday = new Date()
                 yesterday.setTime(yesterday.getTime() - 24 * 60 * 60 * 1000);
@@ -319,50 +308,37 @@
                         var date = '0' + date
                     }
                 }
-
                 document.write("<div id='newstext'></div><img id='news' src='" + head + year + '/' + month + '/' + year + '-' + month + '-' + date + end + "' class='drop-in'>")
             </script>
-
-        </div>
-        <ul class="social">
-            <li> <a href="/about/"> <span class="iconfont icon-about"></span> </a> </li>
-            <li> <a href="http://github.com/ravelloh" target="_blank" rel="noreferrer"> <span
-                class="iconfont icon-github"></span> </a> </li>
-            <li> <a href="http://xeocnet-studio.github.io" target="_blank" rel="noreferrer"> <span
-                class="iconfont icon-home"> </span> </a> </li>
-        </ul>
-        <div class="text" id="text">
-            <h4>- 信息 -</h4>
-            <p>
-                当前预览的新闻:<b id='newsdate'>此页面需要JavaScript支持，请检查相关配置</b>
-            </p>
-            <p>
-                预计响应时间:<b id='loadtime'>正在连接至服务器...</b>
-            </p>
-            <h4>- 查询 -</h4>
-            <div class='searchbox'>
-                <form class="searchbox" onSubmit="return check();" autocomplete="off">
-                    <input type="text" placeholder="从所有新闻中搜索关键字..." name="search" oninput="searchthetext()" onpropertychange="searchthetext()">
-                    <div class="resultlist" id="resultlist">
-                        <i>- 搜索 -</i><hr><p align="center">
-                            输入关键词以在文章标题及正文中查询
-                        </p>
-                        <hr><a href="https://github.com/ravelloh/RPageSearch">Search powered by RavelloH's RPageSearch</a>
-                    </div>
-                </form>
             </div>
-            <form onsubmit="return post()">
-                <div class="form-group">
-                    <input type="date" name="date" id="date" value="" min="2022-06-05" max="" required>
-                    <button class="button" value="查询" onclick="search();">查询</button>
-                    <button class="button" value="查询文字版" onclick="searchtext();">查询文字版</button>
+            <ul class="social">
+                <li><a href="/about/"><span class="i ri:file-info-line"></span></a></li>
+                <li><a href="http://github.com/ravelloh" target="_blank" rel="noreferrer"><span class="i ri:github-fill"></span></a></li>
+                <li><a href="http://xeocnet-studio.github.io" target="_blank" rel="noreferrer"> <span class="i ri:building-2-line"> </span> </a></li>
+                <li><a href="https://ravelloh.github.io/RSS/rss.xml" target="_blank"><span class="i ri:rss-fill"></span></a></li>
+            </ul>
+            <div class="text" id="text">
+                <h4>- 信息 -</h4>
+                <p>当前预览的新闻:<b id="newsdate">此页面需要JavaScript支持，请检查相关配置</b></p>
+                <p>预计响应时间:<b id="loadtime">正在连接至服务器...</b></p>
+                <h4>- 查询 -</h4>
+                <div class="searchbox">
+                    <form class="searchbox" onsubmit="return check();" autocomplete="off">
+                        <input type="text" placeholder="从所有新闻中搜索关键字..." name="search" oninput="searchthetext()" onpropertychange="searchthetext()">
+                        <div class="resultlist" id="resultlist">
+                            <i>- 搜索 -</i>
+                            <hr>
+                            <p align="center">输入关键词以在文章标题及正文中查询</p>
+                            <hr><a href="https://github.com/ravelloh/RPageSearch">Search powered by RavelloH's RPageSearch</a>
+                        </div>
+                    </form>
                 </div>
-                <br>
-
-                <p>
-                    最近十天新闻:
-                </p>
-                <script>
+                <form onsubmit="return post()">
+                    <div class="form-group">
+                        <input type="date" name="date" id="date" value="" min="2022-06-05" max="" required> <button class="button" value="查询" onclick="search();">查询</button> <button class="button" value="查询文字版" onclick="searchtext();">查询文字版</button>
+                    </div> <br>
+                    <p>最近十天新闻:</p>
+                    <script>
                     var local = window.location.search;
                     document.getElementById('newsdate').innerHTML = year + '年' + month + '月' + date + '日';
                     if (local.substring(0, 6) == '?date=') {
@@ -410,34 +386,14 @@
                         }
                         document.write("<a class='c' onclick='qcsearch(" + daysyear + daysmonth + daysdate + ")'>" + daysyear + '年' + daysmonth + '月' + daysdate + '日' + "</a>");;
                     }
-                </script>
-
-                <br>
-                <br>
-
-                <h4>- 分享 -</h4>
-                <a class='linkline' id='share'>/EverydayNews/</a>
-                <button class="button" value="复制" onclick="copyHandle();" id='sharebutton'>复制当前新闻链接</button>
-                <button class="button half" value="下载" onclick="downloadtext();" id='downloadbutton'>下载文字版</button>
-                <button class="button half" value="下载JSON" onclick="downloadjson();" id='downloadbutton'>下载JSON</button>
-                <br>
-                <br>
-                <br>
-                <h4>- 关于 -</h4>
-                <p>
-                    作者:RavelloH<br>
-                    开源地址:<a href='https://github.com/RavelloH/EverydayNews'
-                        class="linkline">Github-RavelloH/EverydayNews</a><br>
-                    LICENCE:MIT<br>
-                    总浏览量:<b><span id="twikoo_visitors">正在连接至服务器...</span></b>
-                    <br>
-                </p>
-
-                <br>
-                <h4>- 评论 -</h4>
-                <div id='tcomment'></div>
-                <script src="https://cdn.staticfile.org/twikoo/1.6.4/twikoo.all.min.js"></script>
-                <script>
+                </script> <br> <br>
+                    <h4>- 分享 -</h4> <a class="linkline" id="share">/EverydayNews/</a> <button class="button" value="复制" onclick="copyHandle();" id="sharebutton">复制当前新闻链接</button> <button class="button half" value="下载" onclick="downloadtext();" id="downloadbutton">下载文字版</button> <button class="button half" value="下载JSON" onclick="downloadjson();" id="downloadbutton">下载JSON</button> <br> <br> <br>
+                    <h4>- 关于 -</h4>
+                    <p>作者:RavelloH<br> 开源地址:<a href="https://github.com/RavelloH/EverydayNews" class="linkline">Github-RavelloH/EverydayNews</a><br> LICENCE:MIT<br> 总浏览量:<b><span id="twikoo_visitors">正在连接至服务器...</span></b> <br></p> <br>
+                    <h4>- 评论 -</h4>
+                    <div id="tcomment"></div>
+                    <script src="https://cdn.staticfile.org/twikoo/1.6.4/twikoo.all.min.js"></script>
+                    <script>
                     window.TWIKOO_MAGIC_PATH = "EverydayNews";
                     twikoo.init({
                         envId: 'https://comment.z-blog.tk/', // 腾讯云环境填 envId；Vercel 环境填地址（https://xxx.vercel.app）
@@ -445,8 +401,8 @@
                         path: 'window.TWIKOO_MAGIC_PATH||window.location.pathname',
                     })
                 </script>
+                </form>
             </div>
-
         </section>
         <div class="menu">
             <ul>
@@ -635,8 +591,6 @@
             }
         </script>
         <script src="/js/script.js"></script>
-        <script src="//instant.page/5.1.0" type="module"
-            integrity="sha384-by67kQnR+pyfy8yWP4kPO12fHKRLHZPfEsiSXR8u2IKcTdxD805MGUXBzVPnkLHw"></script>
+        <script src="//instant.page/5.1.0" type="module" integrity="sha384-by67kQnR+pyfy8yWP4kPO12fHKRLHZPfEsiSXR8u2IKcTdxD805MGUXBzVPnkLHw"></script>
     </body>
-
 </html>
