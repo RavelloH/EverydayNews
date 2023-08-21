@@ -4,11 +4,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>RThemeV3: 全面升级 | RavelloH’s Blog</title>
+    <title>EverydayNews | RavelloH’s Blog</title>
     <meta name="keywords" content="RavelloH,blog,javascript,nodejs" />
-    <meta name="description" content="RThemeV2: 全面升级 | RavelloH的博客" />
+    <meta name="description" content="每日新闻/ 凌晨四点更新 | RavelloH的博客" />
     <meta name="author" content="RavelloH" />
-    <meta name="pagetype" content="articles-context" />
+    <meta name="pagetype" content="context" />
     <meta name="theme-color" content="#111111" />
     <meta property="og:title" content="RavelloH's Blog">
     <meta property="og:type" content="website">
@@ -454,7 +454,7 @@
                     <script>
                     window.TWIKOO_MAGIC_PATH = "EverydayNews";
                     twikoo.init({
-                        envId: 'https://comment.z-blog.tk/', // 腾讯云环境填 envId；Vercel 环境填地址（https://xxx.vercel.app）
+                        envId: 'https://comment.ravelloh.top/', // 腾讯云环境填 envId；Vercel 环境填地址（https://xxx.vercel.app）
                         el: '#tcomment',
                         path: 'window.TWIKOO_MAGIC_PATH||window.location.pathname',
                     })
@@ -462,11 +462,6 @@
                 </form>
             </div>
         </section>
-        <div class="menu">
-            <ul>
-                <script type="text/javascript" src="/js/menu.js"></script>
-            </ul>
-        </div>
         <script>
             function drop() {
                 document.getElementById("tip").classList.add('disappear');
@@ -510,7 +505,7 @@
                 });
             }
             function speedtest() {
-                getSpeedWithImg("/img/avatar.jpg"+"?"+Math.floor(Math.random()*2400000), 55.2).then(speed => {
+                getSpeedWithImg("https://ravelloh.github.io/img/avatar.jpg"+"?"+Math.floor(Math.random()*2400000), 55.2).then(speed => {
                     speed = 400 / speed + '';
                     document.getElementById('loadtime').innerHTML = speed.substring(0, speed.indexOf(".") + 5) + '秒';
                 })
