@@ -11,15 +11,15 @@ import os,re
 import json
 import ssl
 
-url = "https://api.03c3.cn/zb/api.php"
+url = "https://api.noome.cn/zb/60spng.php"
 texturl = "https://api.blogs.ink/api/today/?"
 res=urlopen(url)    
 data = res.read()
 # 转换成字符串
-strs = str(data)
+#strs = str(data)
 # 截取字符串
-pattern = re.compile(r'[a-zA-z]+://[^\s"]*')
-strs_for_json = pattern.search(strs).group()
+#pattern = re.compile(r'[a-zA-z]+://[^\s"]*')
+#strs_for_json = pattern.search(strs).group()
 
 now = datetime.datetime.now()+ datetime.timedelta(hours=8)
 nowY = now.strftime("%Y")
@@ -48,7 +48,7 @@ f2.write(str(textjson))
 f3.write(textresult.replace('&#34;','"'))
 f4.write(str(textjson))
 # 保存到本地
-path=download(strs_for_json,out='./'+str(nowY)+'/'+str(nowM)+'/'+nowt+'.jpg')
+path=download(url,out='./'+str(nowY)+'/'+str(nowM)+'/'+nowt+'.jpg')
 os.remove('./latest.jpg')
 download(strs_for_json,out='./latest.jpg')
 print(path)
