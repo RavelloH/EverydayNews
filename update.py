@@ -50,5 +50,5 @@ f4.write(str(textjson))
 # 保存到本地
 path=download(url,out='./'+str(nowY)+'/'+str(nowM)+'/'+nowt+'.jpg')
 os.remove('./latest.jpg')
-download(strs_for_json,out='./latest.jpg')
+download(url,out='./latest.jpg')
 print(path)
