@@ -41,7 +41,7 @@ textcontext=urlopen(texturl,context=context)
 textdata=textcontext.read()
 textjson = json.loads(textdata)
 textresult=''
-for i in textjson['data']['content']:
+for i in textjson['data']:
     textresult=textresult+i+'\n'
 f.write(textresult.replace('&#34;','"'))
 f2.write(str(textjson))
