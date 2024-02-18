@@ -12,7 +12,7 @@ import json
 import ssl
 
 url = "https://api.noome.cn/zb/60spng.php"
-texturl = "https://api.blogs.ink/api/today/?"
+texturl = "https://60s.viki.moe/60s?e=json"
 res=urlopen(url)    
 data = res.read()
 # 转换成字符串
