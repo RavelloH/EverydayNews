@@ -55,5 +55,10 @@
 }
 ```
 
+## 依赖
+目前正在使用 [vikiboss/60s](https://github.com/vikiboss/60s) 作为数据源，  
+使用 [RavelloH/index-search](https://github.com/RavelloH/index-search)作为静态搜索工具，
+使用Github Actions进行每日更新。
+
 
 
