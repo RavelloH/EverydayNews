@@ -3,7 +3,8 @@
 
 新版的EverydayNews，存储2022/06/04至今的所有每日60s新闻，以JSON格式存放，每日更新，自带搜索功能。[https://ravelloh.github.io/EverydayNews](https://ravelloh.github.io/EverydayNews)
 
-![image](https://github.com/user-attachments/assets/3132960a-354e-4fec-b29b-8f96338490d3)
+![image](https://github.com/user-attachments/assets/d6189b72-f5ff-4f2b-a31f-53e5277d7921)
+
 
 大幅简化了页面，你可以使用查询参数自定义页面：
 - date: https://ravelloh.github.io/EverydayNews?date=20230101
