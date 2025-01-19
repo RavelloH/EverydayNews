@@ -1,7 +1,7 @@
 name: update
 on:
     schedule:
-        - cron: '30 19 * * *' 
+        - cron: '30 19/3 * * *' 
     watch:
         types: [started]
     workflow_dispatch:
