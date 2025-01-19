@@ -1,0 +1,400 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet">
+    <title>EverydayNews</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .search-bar {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        .search-button {
+            padding: 8px 16px;
+            font-size: 16px;
+            margin-left: 8px;
+        }
+
+        .date-picker {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .date-picker label {
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .date-picker input {
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .error {
+            color: red;
+            margin-top: 20px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .share-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .share-button:hover {
+            background-color: #0056b3;
+        }
+
+        .custom-alert {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+        }
+
+        .custom-alert button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 id="pageTitle"><a href="https://ravelloh.github.io/EverydayNews">EverydayNews</a></h1>
+        <div class="search-bar" id="searchBar">
+            <input type="text" id="searchInput" class="search-input" placeholder="搜索...">
+            <button class="search-button" onclick="doSearch()">搜索</button>
+        </div>
+        <div id="loading" class="loading">加载中...</div>
+        <div id="progressIndicator" style="margin-top: 10px; color: #666;"></div>
+        <div id="defaultContent">
+            <p id="newsDate"></p>
+            <ul id="newsList"></ul>
+        </div>
+        <div class="date-picker" id="datePicker">
+            <label for="dateInput">选择日期:</label>
+            <input type="date" id="dateInput" min="2022-06-04" onchange="fetchNewsByDate()">
+        </div>
+        <button id="shareButton" class="share-button" onclick="shareNews()">分享当前链接</button>
+        <div id="errorMessage" class="error"></div>
+        <div id="customAlert" class="custom-alert">
+            <p id="alertMessage"></p>
+        </div>
+        <script>
+            function showAlert(message) {
+                const alertBox = document.getElementById('customAlert');
+                const alertMessage = document.getElementById('alertMessage');
+                alertMessage.textContent = message;
+                alertBox.style.display = 'block';
+                setTimeout(() => {
+                    alertBox.style.display = 'none';
+                }, 3000);
+            }
+
+            function closeAlert() {
+                const alertBox = document.getElementById('customAlert');
+                alertBox.style.display = 'none';
+            }
+
+            async function search(words) {
+                if (!Array.isArray(words)) {
+                    words = words.split('');
+                }
+                const progressEl = document.getElementById('progressIndicator');
+                progressEl.textContent = '开始获取文件...';
+                const total = words.length;
+                const charDataList = [];
+
+                const fetchPromises = words.map(async (char, idx) => {
+                    try {
+                        const res = await fetch(`search/${char}.json`);
+                        const json = await res.json();
+                        charDataList[idx] = json.data;
+                        progressEl.textContent = `已获取${charDataList.filter(Boolean).length}/${total}个文件...`;
+                    } catch (error) {
+                        console.error(`Error fetching ${char}:`, error);
+                    }
+                });
+
+                await Promise.all(fetchPromises);
+
+                const resultMap = {};
+                charDataList.forEach((charData, idx) => {
+                    charData.forEach((item) => {
+                        const { src, index: positions } = item;
+                        if (!resultMap[src]) {
+                            resultMap[src] = Array(charDataList.length)
+                                .fill(null)
+                                .map(() => []);
+                        }
+                        resultMap[src][idx] = positions;
+                    });
+                });
+
+                const matched = [];
+                for (const src in resultMap) {
+                    const indicesArr = resultMap[src];
+                    if (indicesArr.every((arr) => arr.length > 0)) {
+                        let found = false;
+                        indicesArr[0].forEach((pos) => {
+                            let consecutive = true;
+                            for (let i = 1; i < indicesArr.length; i++) {
+                                if (!indicesArr[i].includes(pos + i)) {
+                                    consecutive = false;
+                                    break;
+                                }
+                            }
+                            if (consecutive) found = true;
+                        });
+                        if (found) matched.push(src);
+                    }
+                }
+
+                matched.sort((a, b) => {
+                    const [ay, am, ad] = a.split("/");
+                    const [by, bm, bd] = b.split("/");
+                    return new Date(by, bm - 1, bd) - new Date(ay, am - 1, ad);
+                });
+
+                progressEl.textContent = '';
+                return matched;
+            }
+
+            async function doSearch() {
+                const query = document.getElementById('searchInput').value.trim();
+                if (!query) {
+                    showAlert('请输入搜索关键词');
+                    return;
+                }
+                const matched = await search(query.split(''));
+                displaySearchResults(matched.map(src => [src, null]));
+            }
+
+            async function fetchNews(url) {
+                try {
+                    showLoading(true);
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error('网络响应失败');
+                    }
+                    const data = await response.json();
+                    displayNews(data);
+                } catch (error) {
+                    displayError('获取新闻失败: ' + error.message);
+                } finally {
+                    showLoading(false);
+                }
+            }
+
+            async function fetchLatestNews() {
+                fetchNews('latest.json');
+            }
+
+            async function fetchNewsByDate() {
+                const dateInput = document.getElementById('dateInput').value;
+                if (!dateInput) return;
+                const [year, month, day] = dateInput.split('-');
+                const url = `/data/${year}/${month}/${day}.json`;
+                fetchNews(url);
+            }
+
+            function displayNews(data) {
+                const newsDate = document.getElementById('newsDate');
+                const newsList = document.getElementById('newsList');
+                const errorMessage = document.getElementById('errorMessage');
+                newsDate.textContent = `日期: ${data.date}`;
+                newsList.innerHTML = '';
+                errorMessage.textContent = '';
+                data.content.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    newsList.appendChild(li);
+                });
+            }
+
+            function displayError(message) {
+                const errorMessage = document.getElementById('errorMessage');
+                errorMessage.textContent = message;
+            }
+
+            function showLoading(isLoading) {
+                const loading = document.getElementById('loading');
+                loading.style.display = isLoading ? 'block' : 'none';
+            }
+
+            function getQueryParams() {
+                const params = new URLSearchParams(window.location.search);
+                return {
+                    date: params.get('date'),
+                    style: params.get('style'),
+                    backgroundColor: params.get('backgroundColor'),
+                    textColor: params.get('textColor'),
+                    footer: params.get('footer') // 新增footer参数
+                };
+            }
+
+            function applyStyle(style) {
+                if (style === 'clean') {
+                    document.getElementById('pageTitle').style.display = 'none';
+                    document.getElementById('searchBar').style.display = 'none';
+                    document.getElementById('datePicker').style.display = 'none';
+                    document.getElementById('shareButton').style.display = 'none';
+                }
+            }
+
+            function applyColors(backgroundColor, textColor) {
+                if (backgroundColor) {
+                    document.body.style.backgroundColor = backgroundColor;
+                }
+                if (textColor) {
+                    document.body.style.color = textColor;
+                }
+            }
+
+            function applyFooter(footer) {
+                if (footer === 'none') {
+                    document.querySelector('footer').style.display = 'none';
+                }
+            }
+
+            function isValidDate(date) {
+                const minDate = new Date('2022-06-04');
+                const maxDate = new Date();
+                const selectedDate = new Date(date.slice(0, 4) + '-' + date.slice(4, 6) + '-' + date.slice(6, 8));
+                return selectedDate >= minDate && selectedDate <= maxDate;
+            }
+
+            function shareNews() {
+                const dateInput = document.getElementById('dateInput').value;
+                if (dateInput) {
+                    const url = `${window.location.origin}${window.location.pathname}?date=${dateInput.replace(/-/g, '')}`;
+                    navigator.clipboard.writeText(url).then(() => {
+                        showAlert('链接已复制到剪贴板');
+                    }).catch(err => {
+                        showAlert('复制失败: ' + err);
+                    });
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const { date, style, backgroundColor, textColor, footer } = getQueryParams();
+                applyStyle(style);
+                applyColors(backgroundColor, textColor);
+                applyFooter(footer); // 应用footer参数
+                const dateInput = document.getElementById('dateInput');
+                dateInput.max = new Date().toISOString().split('T')[0];
+                if (date) {
+                    if (isValidDate(date)) {
+                        const [year, month, day] = [date.slice(0, 4), date.slice(4, 6), date.slice(6, 8)];
+                        const url = `data/${year}/${month}/${day}.json`;
+                        fetchNews(url);
+                        dateInput.value = `${year}-${month}-${day}`;
+                    } else {
+                        displayError('日期超出有效范围: 2022-06-04 至今');
+                    }
+                } else {
+                    fetchLatestNews();
+                    const today = new Date();
+                    const formattedDate = today.toISOString().split('T')[0];
+                    dateInput.value = formattedDate;
+                }
+            });
+
+            function displaySearchResults(results) {
+                const newsList = document.getElementById('newsList');
+                newsList.innerHTML = '';
+                if (results.length === 0) {
+                    showAlert('未找到相关结果');
+                    return;
+                }
+                results.forEach(([src]) => {
+                    const li = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = `?date=${src.replace(/\//g, '')}`;
+                    link.textContent = `新闻日期: ${src.replace(/\//g, '-')}`;
+                    li.appendChild(link);
+                    newsList.appendChild(li);
+                });
+            }
+        </script>
+        <footer>
+            <hr>
+            <p>
+            <details>
+                <summary>设置</summary>
+                <p>支持的参数:</p>
+                <ul>
+                    <li>date: 日期, 格式为YYYYMMDD</li>
+                    <li>style: 风格, 可选值为clean</li>
+                    <li>footer: 页脚, none为隐藏</li>
+                    <li>backgroundColor: 背景色, 任意有效的CSS颜色值(例如111111)</li>
+                    <li>textColor: 文字颜色, 任意有效的CSS颜色值(例如ffffff)</li>
+                </ul>
+                例如:
+                <ul>
+                    <li><a href="?style=clean">?style=clean(简化模式)</a></li>
+                    <li><a href="?footer=none">?footer=none(隐藏页脚)</a></li>
+                    <li><a href="?style=clean&footer=none">?style=clean&footer=none(仅显示新闻)</a></li>
+                    <li><a href="?date=20220604">?date=20220604(指定日期)</a></li>
+                    <li><a
+                            href="?date=20220604&backgroundColor=111111&textColor=ffffff">?backgroundColor=111111&textColor=ffffff(暗色主题)</a>
+                    </li>
+                </ul>
+
+
+                <hr>
+                推荐将本站使用iframe挂载到你的网站上: <br>
+                <code>&lt;iframe src="https://ravelloh.github.io/EverydayNews?style=clean" width="600" height="800" frameborder="0"&gt;&lt;/iframe&gt;</code>
+                <br>
+                <code>&lt;iframe src="https://ravelloh.github.io/EverydayNews?style=clean&backgroundColor=111111&textColor=ffffff" width="600" height="800" frameborder="0"&gt;&lt;/iframe&gt;</code>
+
+            </details>
+            </p>
+
+            <p><a href="https://github.com/RavelloH/EverydayNews" target="_blank"
+                    rel="noopener">Github:RavelloH/EverydayNews</a></p>
+        </footer>
+        <script defer src="https://analytics.ravelloh.top/script.js"
+            data-website-id="eb3f393e-35af-49bf-ae7d-79a72477cca7"></script>
+    </div>
+</body>
+
+</html>

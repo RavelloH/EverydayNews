@@ -1,0 +1,42 @@
+name: update
+on:
+    schedule:
+        - cron: '30 19 * * *' 
+    watch:
+        types: [started]
+    workflow_dispatch:
+
+permissions:
+    contents: write
+    pages: write
+    id-token: write
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+            - name: 'Git set'
+              run: |
+                  git init
+                  git pull
+            - name: 'Setup nodejs'
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 'latest'
+            - name: 'Install requirements'
+              run: |
+                  npm install
+            - name: 'Working'
+              run: node update.js
+            - name: Commit files
+              run: |
+                  git config --local user.email "dr_hamilton@foxmail.com"
+                  git config --local user.name "Ravello-H"
+                  git add -A
+                  git commit -m "`date '+%Y-%m-%d %H:%M:%S'`" || exit
+                  git status
+                  git push
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

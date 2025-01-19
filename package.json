@@ -1,0 +1,17 @@
+{
+  "name": "news-archive",
+  "version": "1.0.0",
+  "description": "",
+  "main": "update.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "ravelloh",
+  "license": "MIT",
+  "dependencies": {
+    "index-search": "^1.1.0",
+    "moment": "^2.30.1",
+    "rlog-js": "^1.4.2"
+  }
+}
