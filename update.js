@@ -7,6 +7,9 @@ const rlog = new RLog({
   timezone: "Asia/Shanghai",
 });
 
+const retry = 10;
+let tryTime = 1;
+
 async function main() {
   rlog.log("Start to get news ...");
   try {
@@ -41,7 +44,7 @@ async function main() {
 
     const dirPath = path.dirname(filePath);
     if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath, { recursive: true });
+      fs.mkdirSync(dirPath, { recursive: true });
     }
 
     fs.writeFileSync(filePath, JSON.stringify(newsData, null, 2));
@@ -50,8 +53,14 @@ async function main() {
     rlog.success("Save news successfully.");
   } catch (error) {
     rlog.error(error.message);
-
-    // fetch(`https://api.day.app/${process.env.BARK_TOKEN}/[news-archive]${encodeURIComponent(error.message)}`);
+    if (tryTime >= retry) {
+      rlog.error("Failed to get news.");
+      rlog.log("End to retry.");
+      // fetch(`https://api.day.app/${process.env.BARK_TOKEN}/[news-archive]${encodeURIComponent(error.message)}`);
+      process.exit(1);
+    }
+    rlog.log("Start to retry ...");
+    main();
   }
 }
 
