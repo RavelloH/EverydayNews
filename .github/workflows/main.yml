@@ -1,7 +1,7 @@
 name: update
 on:
     schedule:
-        - cron: '30 19/3 * * *' 
+        - cron: '30 19/1 * * *' 
     watch:
         types: [started]
     workflow_dispatch:
@@ -31,6 +31,7 @@ jobs:
             - name: 'Working'
               run: node update.js
             - name: Commit files
+              continue-on-error: True
               run: |
                   git config --local user.email "dr_hamilton@foxmail.com"
                   git config --local user.name "Ravello-H"
