@@ -13,7 +13,7 @@ let tryTime = 1;
 async function main() {
   rlog.log("Start to get news ...");
   try {
-    let origin = await fetch("http://60s-api.viki.moe/v2/60s")
+    let origin = await fetch("http://60s-api-cf.viki.moe/v2/60s")
       .then((res) => res.json())
       .then((res) => {
         return res;
@@ -23,7 +23,8 @@ async function main() {
       throw new Error("Failed to get news.");
     }
 
-    const { date, news } = origin.data;
+    let { date, news } = origin.data;
+    date = date.replaceAll("-", "/");
     rlog.success("Get news successfully.");
     rlog.log("Start to save news ...");
 
@@ -32,8 +33,8 @@ async function main() {
 
     let newsList = [];
     news.forEach((item) => {
-      rlog.info("Processing:", item.title.substring(0, 16) + "...");
-      newsList.push(item.title);
+      rlog.info("Processing:", item.substring(0, 16) + "...");
+      newsList.push(item);
     });
 
     const newsData = {
@@ -53,13 +54,14 @@ async function main() {
     rlog.success("Save news successfully.");
   } catch (error) {
     rlog.error(error.message);
-    if (tryTime >= retry) {
-      rlog.error("Failed to get news.");
+    tryTime++; // 增加重试次数
+    if (tryTime > retry) {
+      rlog.error("Failed to get news after " + retry + " retries.");
       rlog.log("End to retry.");
       // fetch(`https://api.day.app/${process.env.BARK_TOKEN}/[news-archive]${encodeURIComponent(error.message)}`);
       process.exit(1);
     }
-    rlog.log("Start to retry ...");
+    rlog.log(`Retry attempt ${tryTime} of ${retry}...`);
     main();
   }
 }
