@@ -41,3 +41,31 @@ jobs:
                   git push
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    deploy:
+        needs: build
+        environment:
+          name: github-pages
+          url: ${{ steps.deployment.outputs.page_url }}
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout
+            uses: actions/checkout@v4
+          - name: 'Setup nodejs'
+            uses: actions/setup-node@v3
+            with:
+                node-version: 'latest'
+          - name: 'Install requirements'
+            run: |
+                npm install
+          - name: Start to index search
+            run: "node indexSearch.js"
+          - name: Setup Pages
+            uses: actions/configure-pages@v5
+          - name: Upload artifact
+            uses: actions/upload-pages-artifact@v3
+            with:
+              # Upload entire repository
+              path: '.'
+          - name: Deploy to GitHub Pages
+            id: deployment
+            uses: actions/deploy-pages@v4
