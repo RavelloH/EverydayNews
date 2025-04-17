@@ -232,7 +232,7 @@
                 const dateInput = document.getElementById('dateInput').value;
                 if (!dateInput) return;
                 const [year, month, day] = dateInput.split('-');
-                const url = `/data/${year}/${month}/${day}.json`;
+                const url = `data/${year}/${month}/${day}.json`;
                 fetchNews(url);
             }
 
