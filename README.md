@@ -9,7 +9,7 @@
 大幅简化了页面，你可以使用查询参数自定义页面：
 - date: https://ravelloh.github.io/EverydayNews?date=20230101
 - style: https://ravelloh.github.io/EverydayNews?style=clean
-- footer: https://ravelloh.github.io/EverydayNews?footrt=none
+- footer: https://ravelloh.github.io/EverydayNews?footer=none
 - color: https://ravelloh.github.io/EverydayNews?backgroundColor=111111&textColor=ffffff
 
 例如:
