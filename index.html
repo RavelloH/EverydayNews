@@ -113,7 +113,8 @@
             <label for="dateInput">选择日期:</label>
             <input type="date" id="dateInput" min="2022-06-04" onchange="fetchNewsByDate()">
         </div>
-        <button id="shareButton" class="share-button" onclick="shareNews()">分享当前链接</button>
+        <!-- 没人用分享功能，所以暂时隐藏吧 -->
+        <!-- <button id="shareButton" class="share-button" onclick="shareNews()">分享当前链接</button> -->
         <div id="errorMessage" class="error"></div>
         <div id="customAlert" class="custom-alert">
             <p id="alertMessage"></p>
@@ -389,8 +390,11 @@
             </details>
             </p>
 
-            <p><a href="https://github.com/RavelloH/EverydayNews" target="_blank"
-                    rel="noopener">Github:RavelloH/EverydayNews</a></p>
+            <p><a href="https://github.com/RavelloH/EverydayNews" target="_blank" rel="noopener">GitHub:
+                    RavelloH/EverydayNews</a>
+                &middot;
+                <a href="/rss.xml" rel="alternate" type="application/rss+xml">RSS</a>
+            </p>
         </footer>
         <script defer src="https://analytics.ravelloh.top/script.js"
             data-website-id="eb3f393e-35af-49bf-ae7d-79a72477cca7"></script>

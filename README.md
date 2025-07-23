@@ -1,7 +1,9 @@
 # EverydayNews V2
 > 项目重制了，旧项目的备份位于[RavelloH/news-archive](https://github.com/RavelloH/news-archive)
 
-新版的EverydayNews，存储2022/06/04至今的所有每日60s新闻，以JSON格式存放，每日更新，自带搜索功能。[https://ravelloh.github.io/EverydayNews](https://ravelloh.github.io/EverydayNews)
+新版的EverydayNews，存储2022/06/04至今的所有每日60s新闻，以JSON格式存放，每日更新，自带搜索功能，可RSS订阅。  
+预览：[https://ravelloh.github.io/EverydayNews](https://ravelloh.github.io/EverydayNews)  
+国内加速地址：[https://news.ravelloh.top](https://news.ravelloh.top)
 
 ![image](https://github.com/user-attachments/assets/d6189b72-f5ff-4f2b-a31f-53e5277d7921)
 
@@ -55,6 +57,11 @@
   ]
 }
 ```
+
+## RSS
+RSS订阅地址:
+- `https://ravelloh.github.io/EverydayNews/rss.xml`
+- `https://news.ravelloh.top/rss.xml`
 
 ## 依赖
 目前正在使用 [vikiboss/60s](https://github.com/vikiboss/60s) 作为数据源，  
