@@ -71,7 +71,7 @@ function generateRSS(newsData) {
 async function main() {
   rlog.log("Start to get news ...");
   try {
-    let origin = await fetch("http://60s-api-cf.viki.moe/v2/60s")
+    let origin = await fetch("http://60s.viki.moe/v2/60s")
       .then((res) => res.json())
       .then((res) => {
         return res;
