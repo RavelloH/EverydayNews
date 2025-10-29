@@ -7,7 +7,7 @@ const rlog = new RLog({
   timezone: "Asia/Shanghai",
 });
 
-const retry = 100;
+const retry = 10000;
 let tryTime = 1;
 
 // 生成RSS的函数
