@@ -7,7 +7,7 @@ const rlog = new RLog({
   timezone: "Asia/Shanghai",
 });
 
-const retry = 10;
+const retry = 100;
 let tryTime = 1;
 
 // 生成RSS的函数
@@ -71,13 +71,13 @@ function generateRSS(newsData) {
 async function main() {
   rlog.log("Start to get news ...");
   try {
-    let origin = await fetch("https://bridge.ravelloh.top/60s.viki.moe/v2/60s")
+    let origin = await fetch("https://60s.viki.moe/v2/60s")
       .then((res) => res.json())
       .then((res) => {
         return res;
       });
     if (!origin || !origin.data || origin.code != 200) {
-      rlog.file.error(origin);
+      rlog.error(origin);
       throw new Error("Failed to get news.");
     }
 
