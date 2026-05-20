@@ -205,7 +205,9 @@
                     showAlert('请输入搜索关键词');
                     return;
                 }
+                window.insightflare?.track('search', { query, length: query.length });
                 const matched = await search(query.split(''));
+                window.insightflare?.track('search_result', { query, count: matched.length });
                 displaySearchResults(matched.map(src => [src, null]));
             }
 
@@ -234,6 +236,11 @@
                 if (!dateInput) return;
                 const [year, month, day] = dateInput.split('-');
                 const url = `data/${year}/${month}/${day}.json`;
+                const newQuery = `?date=${year}${month}${day}`;
+                if (window.location.search !== newQuery) {
+                    history.pushState({}, '', newQuery);
+                }
+                window.insightflare?.track('date_change', { date: dateInput });
                 fetchNews(url);
             }
 
@@ -339,6 +346,19 @@
                 }
             });
 
+            window.addEventListener('popstate', () => {
+                const { date } = getQueryParams();
+                const dateInput = document.getElementById('dateInput');
+                if (date && isValidDate(date)) {
+                    const [year, month, day] = [date.slice(0, 4), date.slice(4, 6), date.slice(6, 8)];
+                    dateInput.value = `${year}-${month}-${day}`;
+                    fetchNews(`data/${year}/${month}/${day}.json`);
+                } else {
+                    dateInput.value = new Date().toISOString().split('T')[0];
+                    fetchLatestNews();
+                }
+            });
+
             function displaySearchResults(results) {
                 const newsList = document.getElementById('newsList');
                 newsList.innerHTML = '';
@@ -351,6 +371,8 @@
                     const link = document.createElement('a');
                     link.href = `?date=${src.replace(/\//g, '')}`;
                     link.textContent = `新闻日期: ${src.replace(/\//g, '-')}`;
+                    link.setAttribute('data-insightflare-event', 'search_result_click');
+                    link.setAttribute('data-insightflare-event-date', src.replace(/\//g, '-'));
                     li.appendChild(link);
                     newsList.appendChild(li);
                 });
