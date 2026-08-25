@@ -12,6 +12,7 @@ import { AnimatePresence, MotionConfig, motion } from 'motion/react'
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from 'react'
 import { AutoResizer } from './components/AutoResizer'
 import { AutoTransition } from './components/AutoTransition'
+import { initializeInsightFlare, trackInsightFlare } from './analytics'
 import { CodeScrollArea } from './components/CodeScrollArea'
 import { GlobalScrollbars } from './components/GlobalScrollbars'
 import './styles.css'
@@ -113,6 +114,17 @@ function shiftDate(dateKey: string, amount: number) {
     .join('-')
 }
 
+function extractHttpStatus(error: unknown) {
+  const message = error instanceof Error ? error.message : ''
+  const match = message.match(/\b([45]\d{2})\b/)
+  return match ? Number(match[1]) : null
+}
+
+function summarizeError(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error)
+  return message.replace(/https?:\/\/\S+/g, '[url]').slice(0, 160)
+}
+
 async function fetchNews(url: string) {
   const response = await fetch(assetUrl(url))
   if (!response.ok) throw new Error(`请求返回 ${response.status}`)
@@ -124,18 +136,25 @@ async function fetchNews(url: string) {
 }
 
 type SearchIndexEntry = { src: string; index: number[] }
+type SearchArchiveResult = { results: string[]; failedCharacters: number }
 
-async function searchArchive(query: string) {
+async function searchArchive(query: string): Promise<SearchArchiveResult> {
   const characters = [...query].filter((character) => character.trim() !== '')
-  if (characters.length === 0) return []
+  if (characters.length === 0) return { results: [], failedCharacters: 0 }
+
+  let failedCharacters = 0
 
   const files = await Promise.all(characters.map(async (character) => {
     try {
       const response = await fetch(assetUrl(`search/${encodeURIComponent(character)}.json`))
-      if (!response.ok) return [] as SearchIndexEntry[]
+      if (!response.ok) {
+        failedCharacters += 1
+        return [] as SearchIndexEntry[]
+      }
       const data = await response.json() as { data?: SearchIndexEntry[] }
       return Array.isArray(data.data) ? data.data : []
     } catch {
+      failedCharacters += 1
       return [] as SearchIndexEntry[]
     }
   }))
@@ -150,13 +169,15 @@ async function searchArchive(query: string) {
     })
   })
 
-  return [...resultMap.entries()]
+  const results = [...resultMap.entries()]
     .filter(([, positions]) => positions.every((item) => item.length > 0))
     .filter(([, positions]) => positions[0].some((position) => (
       positions.slice(1).every((otherPositions, offset) => otherPositions.includes(position + offset + 1))
     )))
     .map(([src]) => src)
     .sort((left, right) => right.localeCompare(left))
+
+  return { results, failedCharacters }
 }
 
 function highlightText(text: string, query: string): ReactNode {
@@ -225,6 +246,32 @@ function App() {
   }) as CSSProperties, [route.backgroundColor, route.textColor])
 
   useEffect(() => {
+    initializeInsightFlare()
+  }, [])
+
+  useEffect(() => {
+    const handleRuntimeError = (event: ErrorEvent) => {
+      trackInsightFlare('app_error', {
+        error_type: 'runtime',
+        message: summarizeError(event.error ?? event.message),
+      })
+    }
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      trackInsightFlare('app_error', {
+        error_type: 'unhandled_rejection',
+        message: summarizeError(event.reason),
+      })
+    }
+
+    window.addEventListener('error', handleRuntimeError)
+    window.addEventListener('unhandledrejection', handleUnhandledRejection)
+    return () => {
+      window.removeEventListener('error', handleRuntimeError)
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection)
+    }
+  }, [])
+
+  useEffect(() => {
     if (!isSettingsOpen) return
 
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -257,6 +304,7 @@ function App() {
     setViewStatus('loading')
     setErrorMessage('')
     setNews(null)
+    const startedAt = performance.now()
 
     fetchNews(route.date ? getDataPath(route.date) : 'latest.json')
       .then((data) => {
@@ -266,6 +314,12 @@ function App() {
       })
       .catch((error: Error) => {
         if (cancelled) return
+        trackInsightFlare('news_load_error', {
+          date: route.date ?? 'latest',
+          source: route.date ? 'archive' : 'latest',
+          status: extractHttpStatus(error),
+          duration_ms: Math.round(performance.now() - startedAt),
+        })
         setErrorMessage(error.message || '暂时无法获取新闻。')
         setViewStatus('error')
       })
@@ -295,6 +349,7 @@ function App() {
     const url = new URL(window.location.href)
     url.searchParams.set('date', dateKey.replaceAll('-', ''))
     window.history.pushState({}, '', url)
+    trackInsightFlare('date_change', { date: dateKey })
     setSearchResults(null)
     setSearchStatus('idle')
     setHighlightQuery(nextHighlightQuery)
@@ -315,17 +370,31 @@ function App() {
       return
     }
 
+    trackInsightFlare('search', { query, length: query.length })
     const revision = ++searchRevisionRef.current
     setSearchStatus('loading')
     setSearchError('')
     setSearchResults([])
     setHighlightQuery('')
     try {
-      const results = await searchArchive(query)
+      const { results, failedCharacters } = await searchArchive(query)
+      if (failedCharacters > 0) {
+        trackInsightFlare('search_error', {
+          query_length: query.length,
+          failed_characters: failedCharacters,
+          reason: 'index_request',
+        })
+      }
       if (revision !== searchRevisionRef.current) return
       setSearchResults(results)
       setSearchStatus('ready')
+      trackInsightFlare('search_result', { query, count: results.length })
     } catch (error) {
+      trackInsightFlare('search_error', {
+        query_length: query.length,
+        failed_characters: 0,
+        reason: 'unexpected',
+      })
       if (revision !== searchRevisionRef.current) return
       setSearchError(error instanceof Error ? error.message : '搜索失败')
       setSearchStatus('error')
@@ -436,6 +505,8 @@ function App() {
                             className="result-chip"
                             key={result}
                             type="button"
+                            data-insightflare-event="search_result_click"
+                            data-insightflare-event-date={result.replaceAll('/', '-')}
                             onClick={() => navigateToDate(result.replaceAll('/', '-'), searchQuery)}
                           >
                             {result.replaceAll('/', '-')}
@@ -455,7 +526,16 @@ function App() {
                     <div>
                       <strong>这一天暂时无法打开</strong>
                       <span>{errorMessage}</span>
-                      <button className="text-button" type="button" onClick={() => setRetryToken((value) => value + 1)}>重新加载</button>
+                      <button
+                        className="text-button"
+                        type="button"
+                        onClick={() => {
+                          trackInsightFlare('news_retry', { date: route.date ?? 'latest' })
+                          setRetryToken((value) => value + 1)
+                        }}
+                      >
+                        重新加载
+                      </button>
                     </div>
                   </div>
                 ) : news && newsDateKey ? (
