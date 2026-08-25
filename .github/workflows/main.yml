@@ -8,64 +8,36 @@ on:
 
 permissions:
     contents: write
-    pages: write
-    id-token: write
+
+concurrency:
+    group: news-update
+    cancel-in-progress: false
 
 jobs:
     build:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v3
-            - name: 'Git set'
-              run: |
-                  git init
-                  git pull
+              uses: actions/checkout@v4
             - name: 'Setup nodejs'
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
-                  node-version: 'latest'
+                  node-version: '22.x'
             - name: 'Install requirements'
               run: |
-                  npm install
+                  npm ci
             - name: 'Working'
               run: node update.js
             - name: Commit files
-              continue-on-error: True
               run: |
                   git config --local user.email "dr_hamilton@foxmail.com"
                   git config --local user.name "Ravello-H"
                   git add -A
-                  git commit -m "`date '+%Y-%m-%d %H:%M:%S'`" || exit
-                  git status
-                  git push
+                  if git diff --cached --quiet; then
+                    echo "No files changed."
+                  else
+                    git commit -m "`date '+%Y-%m-%d %H:%M:%S'`"
+                    git push origin HEAD:main
+                  fi
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    deploy:
-        needs: build
-        environment:
-          name: github-pages
-          url: ${{ steps.deployment.outputs.page_url }}
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout
-            uses: actions/checkout@v4
-          - name: 'Setup nodejs'
-            uses: actions/setup-node@v3
-            with:
-                node-version: 'latest'
-          - name: 'Install requirements'
-            run: |
-                npm install
-          - name: Start to index search
-            run: "node indexSearch.js"
-          - name: Setup Pages
-            uses: actions/configure-pages@v5
-          - name: Upload artifact
-            uses: actions/upload-pages-artifact@v3
-            with:
-              # Upload entire repository
-              path: '.'
-          - name: Deploy to GitHub Pages
-            id: deployment
-            uses: actions/deploy-pages@v4

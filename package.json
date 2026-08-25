@@ -4,14 +4,29 @@
   "description": "",
   "main": "update.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build && node indexSearch.js && node build-site.js",
+    "preview": "vite preview",
+    "test": "node --check update.js"
   },
   "keywords": [],
   "author": "ravelloh",
   "license": "MIT",
   "dependencies": {
     "index-search": "^1.1.0",
+    "lucide-react": "^1.31.0",
     "moment": "^2.30.1",
+    "motion": "^13.1.0",
+    "overlayscrollbars": "^2.16.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "rlog-js": "^1.4.2"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.0"
   }
 }

@@ -32,21 +32,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: 'Setup nodejs'
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-            node-version: 'latest'
+            node-version: '22.x'
       - name: 'Install requirements'
         run: |
-            npm install
-      - name: Start to index search
-        run: "node indexSearch.js"
+            npm ci
+      - name: Build site
+        run: npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
-          path: '.'
+          path: './dist'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

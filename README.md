@@ -8,7 +8,7 @@
 ![image](https://github.com/user-attachments/assets/d6189b72-f5ff-4f2b-a31f-53e5277d7921)
 
 
-大幅简化了页面，你可以使用查询参数自定义页面：
+页面保留了原有的查询参数，同时重构为 React/Vite 界面。你可以使用查询参数自定义页面：
 - date: https://ravelloh.github.io/EverydayNews?date=20230101
 - style: https://ravelloh.github.io/EverydayNews?style=clean
 - footer: https://ravelloh.github.io/EverydayNews?footer=none
@@ -64,9 +64,17 @@ RSS订阅地址:
 - `https://news.ravelloh.top/rss.xml`
 
 ## 依赖
-目前正在使用 [vikiboss/60s](https://github.com/vikiboss/60s) 作为数据源，  
+目前正在使用 [vikiboss/60s-static-host](https://github.com/vikiboss/60s-static-host) 的静态 JSON 作为数据源，
 使用 [RavelloH/index-search](https://github.com/RavelloH/index-search)作为静态搜索工具，
 使用Github Actions进行每日更新。
+
+## 本地开发
+```bash
+npm install
+npm run dev
+```
+
+生产构建使用 `npm run build`，会生成包含页面、新闻数据和搜索索引的 `dist` 目录。
 
 
 
