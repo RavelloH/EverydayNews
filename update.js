@@ -7,8 +7,83 @@ const rlog = new RLog({
   timezone: "Asia/Shanghai",
 });
 
-const retry = 10000;
-let tryTime = 1;
+const STATIC_DATA_URL =
+  "https://raw.githubusercontent.com/vikiboss/60s-static-host/main/static/60s";
+const FETCH_RETRIES = 3;
+const FETCH_TIMEOUT_MS = 15000;
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function formatDate(date) {
+  return moment(date).utcOffset(8).format("YYYY-MM-DD");
+}
+
+async function fetchStaticNews(date) {
+  const url = `${STATIC_DATA_URL}/${date}.json`;
+  let lastError;
+
+  for (let attempt = 1; attempt <= FETCH_RETRIES; attempt++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+
+      if (response.status === 404) {
+        return null;
+      }
+
+      if (!response.ok) {
+        throw new Error(`Static news request failed with HTTP ${response.status}.`);
+      }
+
+      // raw.githubusercontent.com currently serves these JSON files as text/plain.
+      const raw = await response.text();
+      const data = JSON.parse(raw);
+
+      if (!data || typeof data.date !== "string" || !Array.isArray(data.news)) {
+        throw new Error("Static news response has an invalid format.");
+      }
+
+      return data;
+    } catch (error) {
+      lastError = error;
+      if (attempt < FETCH_RETRIES) {
+        const delay = attempt * 2000;
+        rlog.warn(
+          `Failed to fetch ${date} (attempt ${attempt}/${FETCH_RETRIES}), retrying in ${delay}ms:`,
+          error.message,
+        );
+        await sleep(delay);
+      }
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  throw lastError;
+}
+
+async function getNews() {
+  const today = formatDate();
+  const yesterday = formatDate(moment().subtract(1, "day"));
+
+  rlog.log("Start to get news from static host ...");
+  const todayData = await fetchStaticNews(today);
+  if (todayData) {
+    return todayData;
+  }
+
+  rlog.warn(`Today's static news file (${today}) is not available, trying ${yesterday}.`);
+  const yesterdayData = await fetchStaticNews(yesterday);
+  if (yesterdayData) {
+    return yesterdayData;
+  }
+
+  throw new Error(`No static news file is available for ${today} or ${yesterday}.`);
+}
 
 // 生成RSS的函数
 function generateRSS(newsData) {
@@ -69,19 +144,9 @@ function generateRSS(newsData) {
 }
 
 async function main() {
-  rlog.log("Start to get news ...");
   try {
-    let origin = await fetch("https://60s.viki.moe/v2/60s")
-      .then((res) => res.json())
-      .then((res) => {
-        return res;
-      });
-    if (!origin || !origin.data || origin.code != 200) {
-      rlog.error(origin);
-      throw new Error("Failed to get news.");
-    }
-
-    let { date, news } = origin.data;
+    const origin = await getNews();
+    let { date, news } = origin;
     date = date.replaceAll("-", "/");
     rlog.success("Get news successfully.");
     rlog.log("Start to save news ...");
@@ -138,15 +203,7 @@ async function main() {
     rlog.success("Save news successfully.");
   } catch (error) {
     rlog.error(error.message);
-    tryTime++; // 增加重试次数
-    if (tryTime > retry) {
-      rlog.error("Failed to get news after " + retry + " retries.");
-      rlog.log("End to retry.");
-      // fetch(`https://api.day.app/${process.env.BARK_TOKEN}/[news-archive]${encodeURIComponent(error.message)}`);
-      process.exit(1);
-    }
-    rlog.log(`Retry attempt ${tryTime} of ${retry}...`);
-    main();
+    process.exitCode = 1;
   }
 }
 
