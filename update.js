@@ -52,7 +52,7 @@ async function fetchStaticNews(date) {
       lastError = error;
       if (attempt < FETCH_RETRIES) {
         const delay = attempt * 2000;
-        rlog.warn(
+        rlog.warning(
           `Failed to fetch ${date} (attempt ${attempt}/${FETCH_RETRIES}), retrying in ${delay}ms:`,
           error.message,
         );
@@ -76,7 +76,7 @@ async function getNews() {
     return todayData;
   }
 
-  rlog.warn(`Today's static news file (${today}) is not available, trying ${yesterday}.`);
+  rlog.warning(`Today's static news file (${today}) is not available, trying ${yesterday}.`);
   const yesterdayData = await fetchStaticNews(yesterday);
   if (yesterdayData) {
     return yesterdayData;
@@ -186,7 +186,7 @@ async function main() {
         rlog.log("latest.json not found, will create RSS.");
       }
     } catch (error) {
-      rlog.warn("Failed to read latest.json:", error.message);
+      rlog.warning("Failed to read latest.json:", error.message);
       rlog.log("Will proceed with RSS generation.");
     }
 

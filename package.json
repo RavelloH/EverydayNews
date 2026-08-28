@@ -20,7 +20,7 @@
     "overlayscrollbars": "^2.16.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "rlog-js": "^1.4.2"
+    "rlog-js": "^3.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",
