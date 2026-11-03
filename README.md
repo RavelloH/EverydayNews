@@ -76,5 +76,23 @@ npm run dev
 
 生产构建使用 `npm run build`，会生成包含页面、新闻数据和搜索索引的 `dist` 目录。
 
+## Cloudflare Workers 部署
 
+本项目使用 Workers Static Assets 部署静态网站，不需要独立后端 Worker。`wrangler.jsonc` 中已配置 `everydaynews` Worker 名称与 `dist/` 静态文件目录。未启用 SPA 回退，以便不存在的新闻数据路径返回真正的 404，而非站点首页。
 
+在 Cloudflare Workers → Settings → Build 中设置：
+
+- **Root directory**：`/`
+- **Production branch**：`main`
+- **Build command**：`npm run build`
+- **Deploy command**：`npm run deploy`
+
+Cloudflare 构建会依次执行 Vite 构建、静态搜索索引生成与数据复制。务必使用完整的 `npm run build`，不能仅执行 `vite build`，否则新闻 JSON、RSS 和搜索资源将不会完整出现在 `dist/`。
+
+本地手动部署：
+
+```bash
+npm ci
+npm run build
+npm run deploy
+```
