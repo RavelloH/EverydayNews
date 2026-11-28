@@ -17,6 +17,7 @@ on:
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 
@@ -36,9 +37,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
       - name: 'Setup nodejs'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7.1.0
         with:
             node-version: '22.x'
       - name: 'Install requirements'
@@ -47,11 +48,33 @@ jobs:
       - name: Build site
         run: npm run build
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6.0.0
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        id: pages_artifact
+        uses: actions/upload-pages-artifact@v5.0.0
         with:
           path: './dist'
+      - name: Wait for Pages artifact visibility
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT_ID: ${{ steps.pages_artifact.outputs.artifact_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$ARTIFACT_ID"
+          # Allow the upload and deployment services to converge.
+          sleep 5
+          for delay in 2 4 8 16 30; do
+            if gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?name=github-pages" \
+              --jq '.artifacts[] | select(.expired == false) | .id' | grep -Fxq "$ARTIFACT_ID"; then
+              echo "Pages artifact $ARTIFACT_ID is visible."
+              exit 0
+            fi
+            echo "Waiting for Pages artifact $ARTIFACT_ID ($delay seconds)."
+            sleep "$delay"
+          done
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?name=github-pages" \
+            --jq '.artifacts[] | select(.expired == false) | .id' | grep -Fxq "$ARTIFACT_ID"
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5.0.1
